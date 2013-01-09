@@ -1,4 +1,4 @@
 CRF
 ===
 
-CRF implementation in C++
+Conditional random field implementation in C++
