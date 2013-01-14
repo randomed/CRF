@@ -12,13 +12,15 @@ public:
 		nodeValue = 0.5;
 		neighbours = new vector<node *>();
 	}
-	node(int dimensions) {
+	node(vector<int> coordinates) {
 		nodeValue = 0.5;
-		neighbours = new vector<node*>(2 * dimensions);
+		neighbours = new vector<node*>();
+		this->coordinates = coordinates;
 	};
 
 	vector<node*> getNeighbours() {return *this->neighbours;};
 	void addNeighbour(node * neighbour) {this->neighbours->push_back(neighbour);};
 	float getValue() {return this->nodeValue;};
 	void setValue(float value) {this->nodeValue = value;};
+	vector<int> getCoords() {return this->coordinates;};
 };
