@@ -3,22 +3,22 @@ using namespace std;
 
 class node {
 protected:
-	vector<node*> *neighbours;
+	vector<node *> *neighbours;
 	vector<int> coordinates; //coordinates of the node in n-dimensions
 	float nodeValue; //0.5 indicates unknown occupancy, -1 is used for edges (non-existant neighbours)
 
 public:
 	node () {
-		nodeValue = 0.5;
+		nodeValue = 1;
 		neighbours = new vector<node *>();
 	}
 	node(vector<int> coordinates) {
-		nodeValue = 0.5;
+		nodeValue = 1;
 		neighbours = new vector<node*>();
 		this->coordinates = coordinates;
 	};
 
-	vector<node*> getNeighbours() {return *this->neighbours;};
+	vector<node *> * getNeighbours() {return this->neighbours;};
 	void addNeighbour(node * neighbour) {this->neighbours->push_back(neighbour);};
 	float getValue() {return this->nodeValue;};
 	void setValue(float value) {this->nodeValue = value;};
