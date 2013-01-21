@@ -13,7 +13,11 @@ int main() {
 	node * testNode;
 
 	occupancy_grid *crf = new occupancy_grid(2, gridSize, 4);	
-	crf->getNode(0, 0)->setValue(0.9);
+	crf->getNode(3, 5)->setFixedValue(0);
+	crf->getNode(8, 3)->setFixedValue(2);
+	crf->getNode(9, 3)->setFixedValue(2);
+	crf->getNode(7, 3)->setFixedValue(2);
+	crf->getNode(8, 2)->setFixedValue(2);
 	cout <<  "--initial grid--" << endl;
 	crf->printGrid();
 

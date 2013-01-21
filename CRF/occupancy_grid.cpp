@@ -1,6 +1,7 @@
 #include "occupancy_grid.h"
 #include <time.h>
-
+#include <math.h>
+#include <random>
 //debug
 #include <algorithm>
 #include <iostream>
@@ -82,6 +83,7 @@ void occupancy_grid::__constructGrid(node * currentNode) {
 */
 void occupancy_grid::loopyBeliefPropagation() {
 	map<vector<int>, node *> randomNodeGrid;
+	map<vector<int>, node *> newGrid;
 	int pickRandomNode, iteration;
 	float product = 1, sum;
 	float factorNodeMessage;
@@ -107,11 +109,16 @@ void occupancy_grid::loopyBeliefPropagation() {
 				cout << " value : " << factorNodeMessage;
 				cout << endl;
 			}
-			this->grid[currentNode->first]->setValue(factorNodeMessage);
+
+			this->grid[currentNode->first]->setTempValue(factorNodeMessage);	
 			randomNodeGrid.erase(currentNode);
 		}
 	}
 
+	//update changes throughout grid
+	for (currentNode = this->grid.begin(); currentNode != this->grid.end(); currentNode ++) {
+		currentNode->second->pushTempValue();
+	}
 	//this->normaliseGrid();
 };
 
@@ -145,10 +152,14 @@ void occupancy_grid::normaliseGrid() {
 	}
 };
 float occupancy_grid::factorFunction(float currentValue, float incomingValue) {
-	float calculatedValue = (currentValue + incomingValue) / 2;
+	float averagedValue = (currentValue * 5 + incomingValue) / 6;
+	//float averagedValue = (currentValue + incomingValue) / 2;
+	float variance = sqrt(2.0);
+	float mean = 1;
 
-	return incomingValue;
-	return calculatedValue;
+	//normal_distribution<float> normal(mean, variance);
+	//return incomingValue;
+	return averagedValue;
 };
 
 void occupancy_grid::printGrid() {

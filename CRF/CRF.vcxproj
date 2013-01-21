@@ -60,6 +60,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="node.cpp" />
     <ClCompile Include="occupancy_grid.cpp" />
     <ClCompile Include="Simulation.cpp" />
   </ItemGroup>
