@@ -21,7 +21,7 @@ void Environment::generateTestMap() {
 	}	
 
 	//add hardcoded features here
-	/*
+	///*
 	for (x = 3; x < 7; x ++) {
 		for (y = 2; y < 4; y ++) {
 			this->setMapping(x, y, 1);
@@ -37,7 +37,9 @@ void Environment::generateTestMap() {
 
 	this->setMapping(1, 1, 1);
 	addHashedMapping(1, 1);
-	*/
+	this->setMapping(2, 0, 1);
+	addHashedMapping(2, 0);
+	//*/
 	srand(time(NULL));
 
 	//populate randomly
@@ -71,7 +73,17 @@ void Environment::generateUnknownMap() {
 };
 void Environment::printMap() {
 	int x, y;
+	//label x axes
+	cout << "\t";
+	for (x = 1; x < this->gridSizeHorizontal + 1; x ++) {
+		cout << "-" << x - 1 << "-\t";
+	}
+	cout << endl;
+
 	for (y = 0; y < this->gridSizeVertical; y ++) {
+
+		cout << "-" << y  << "-\t";
+
 		for (x = 0; x < this->gridSizeHorizontal; x ++) {
 			if (x == this->robotCoords.first && y == this->robotCoords.second) {
 				cout << "R" << "\t";

@@ -16,8 +16,8 @@ protected:
 	float calculateNewCertainty(list<float> cellHistory, float newOccupancy);
 public:
 	Environment() {
-		this->gridSizeHorizontal = 10;
-		this->gridSizeVertical = 10;
+		this->gridSizeHorizontal = 8;
+		this->gridSizeVertical = 8;
 		this->robotCoords = make_pair(0, 0);	
 		generateTestMap();
 	};

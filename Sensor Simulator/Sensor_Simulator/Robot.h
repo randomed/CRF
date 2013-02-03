@@ -10,22 +10,30 @@ protected:
 	float Orientation; //orientation of the robot and its x and y coordinates on the mapping
 	pair<int, int> coords;
 	Environment environment; //The robot's view of the environment
-	bool rayCast(Environment realEnv, int x, int y); //performs ray tracing from the point of the robot to the x, y paramters. Returns false if the point is not in line of sight.
+	float rayCast(Environment realEnv, int x, int y); //performs ray tracing from the point of the robot to the x, y paramters. Returns the distance at which a occupied point is discovered, -1 if no occupied detected
 	map<pair<float, float>, float> angleDistanceMap; //maps sensor readings of angle and distances to what the sensor detected
 	map<pair<int, int>, list<float>> sensorHistory; 
 	float viewAngle;
 	int maxViewDistance;
-
+	float angleIncrement; //how much to increase the angle by at each reading, in degrees
 public:
 	Robot() {
-		this->Orientation = 90;
 		float pi = (atan(1.0) * 4);
+
+		this->Orientation = 270;
+
 		this->Orientation *= (atan(1.0) * 4) / 180;
 		this->coords = make_pair(0, 0);
+
 		viewAngle = 180;
+
 		this->viewAngle *= (atan(1.0) * 4) / 180;
+
 		maxViewDistance = 5;
+
 		this->environment = new Environment(*new Environment());
+
+		this->angleIncrement = 1;
 
 	};
 	Robot(int x, int y) {
@@ -35,6 +43,7 @@ public:
 		this->viewAngle = 180;
 		this->viewAngle *= (atan(1.0) * 4) / 180;
 		maxViewDistance = 5;
+		this->angleIncrement = 1;
 	};
 
 	map<pair<float, float>, float> getAngleDistanceMap() {return this->angleDistanceMap;};

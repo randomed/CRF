@@ -6,7 +6,7 @@ using namespace std;
 float getAngle(int x1, int y1, int x2, int y2);
 float getDistance(int x1, int y1, int x2, int y2);
 float convertNegativeAngles(float angle);
-
+float convertAngleQuadrant(); //converts angle to be in first quadrant
 float getAngle(int x1, int y1, int x2, int y2) { //returns the angle of point 2 relative to point 1
 	/*
 	float deltaX, deltaY, angle;
@@ -69,7 +69,7 @@ float getAngle(int x1, int y1, int x2, int y2) { //returns the angle of point 2 
 float getDistance(int x1, int y1, int x2, int y2) {
 	float deltaX, deltaY;
 	deltaX = x2- x1;
-	deltaY= y2 - y1;
+	deltaY = y2 - y1;
 
 	return sqrt(pow(deltaX, 2) + pow(deltaY, 2));
 };
@@ -77,12 +77,14 @@ float convertNegativeAngles(float angle) {
 	float pi = atan(1.0) * 4;
 	if (angle < 0) {
 		angle += pi * 2;
+		
 	}
-
 	return angle;
 };
+
+
 Environment Robot::triggerSensors(Environment *realEnv) { //returns this particular instance of what sensors see
-	
+	/*
 	Environment robotEnv = new Environment(realEnv);
 	unordered_set<string>::iterator it;
 	unordered_set<string> tempMap = realEnv->getHashedMapping();
@@ -94,6 +96,7 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 	bool pass = false;
 	float temp;
 	map< int, int> pairs = *new map<int, int>();
+	*/
 	/*
 	//cout << "result: " << rayTrace(realEnv, 4, 3) << endl;
 
@@ -106,7 +109,7 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 		}
 	}
 	*/
-
+	/*
 	angleUpperbound = convertNegativeAngles(fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2)));
 	if (angleUpperbound == 0) {
 		angleUpperbound = pi * 2;
@@ -168,10 +171,149 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 	realEnv->clearHashedMapping2();
 	//cout << "currentx = " << this->getXPos() << "currenty = " << this->getYPos() << endl;
 	//return tempEnv;
+	*/
+	float pi = atan(1.0) * 4;
+	float angleUpperbound, angleLowerbound, currentAngle, convertedAngle, distance;
+	float angleIncrementRadians = this->angleIncrement / (180 / pi);
+	float x, y, roundedX, roundedY;
+	Environment tempEnv;
+
+	//angleUpperbound = fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2));
+	//if (angleUpperbound == 0) {
+	//	angleUpperbound = pi * 2;
+	//}
+	//angleLowerbound =  fmod(this->getOrientation() - this->getViewAngle() / 2, pi * 2);	
+	
+
+
+	/*for (currentAngle = angleUpperbound + (pi / 2);  currentAngle > angleLowerbound + (pi / 2); currentAngle -= angleIncrementRadians) {
+		x = 10 * cos(currentAngle);
+		y = 10 * sin(currentAngle);
+		cout << "point = " << floor(x * 100) / 100 << ", " << floor(y * 100) / 100 << endl;
+	}*/
+	//angleUpperbound = convertNegativeAngles(pi - fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2)) + (pi / 2));
+	angleUpperbound = convertNegativeAngles(fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2)));
+	if (angleUpperbound == 0) {
+		angleUpperbound = pi * 2;
+	}
+	//angleLowerbound = convertNegativeAngles((pi - fmod(this->getOrientation() - this->getViewAngle() / 2, (pi * 2)) + (pi / 2)));
+	angleLowerbound = convertNegativeAngles(fmod(this->getOrientation() - this->getViewAngle() / 2, (pi * 2)));
+	cout << "orientation = " << this->getOrientation() * (180 / pi) << endl;
+	cout << "upperbound = " << angleUpperbound * (180 / pi) << endl;
+	cout << "lowerbound = " << angleLowerbound * (180 / pi) << endl;
+	cout << "increment = " << angleIncrementRadians * (180 / pi) << endl;
+
+	for (currentAngle = 0;  currentAngle <  2 * pi; currentAngle += angleIncrementRadians * 3) { //converted to angles so there are less rounding errors (in angleIncrementRadians) after many iterations
+	//for (currentAngle = angleLowerbound;  currentAngle <  angleUpperbound; currentAngle += angleIncrementRadians * 3) { //converted to angles so there are less rounding errors (in angleIncrementRadians) after many iterations
+		
+		//find the edge points of circle around robot using parametric equations
+		x = this->getMaxViewDistance() * cos(currentAngle);
+		y = -this->getMaxViewDistance() * sin(currentAngle);
+		roundedX = floor(x + 0.5);
+		roundedY = floor(y + 0.5);
+
+		convertedAngle = convertNegativeAngles((pi - (currentAngle + pi / 2))); //converts the angle to be viewed from 1st quadrant increasing clockwise
+		distance = rayCast(*realEnv, roundedX, roundedY);
+		//check if angle is in range
+		if (	(	
+					angleUpperbound < angleLowerbound
+					&& (convertedAngle < angleUpperbound || convertedAngle > angleLowerbound)
+				)
+				||
+				(	
+					angleUpperbound > angleLowerbound
+					&& (convertedAngle < angleUpperbound && convertedAngle > angleLowerbound)
+				)
+			) {
+			this->addAngleDistanceMapping(convertedAngle, distance, realEnv->getMapping(x, y)); //factor noise
+			cout << "point = " << roundedX << ", " << roundedY 
+			<< "\tangle = " << convertedAngle * (180 / pi) << "\tactual angle = " << (pi - (currentAngle + pi / 2)) * (180 / pi) 
+			<< "\tdistance = " << distance << endl;
+		}			
+
+		
+	}
+
+	//##for testing, delete later
+	tempEnv = this->discretiseReadings(*realEnv, this->getAngleDistanceMap()); //discretise the sensor readings
+	//this->getRobotEnvironment()->mergeMapping(tempEnv, this->getSensorHistory()); //add new sensor readings to current map
+	this->environment = tempEnv;
+	this->clearAngleDistanceMap();
+	realEnv->clearHashedMapping2();
+	return tempEnv;
+
 	return this->getRobotEnvironment();
 };
 
-bool Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
+float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
+
+	int currentx = this->getXPos(); 
+	int currenty = this->getYPos();
+	int dx = abs(x - currentx);
+	int dy = abs(y - currenty);
+	int sx, sy, error, temperror;
+	int threshold = 0;
+	if (x > currentx) {
+		sx = 1;
+	}
+	else {
+		sx = -1;
+	}
+	
+	if (y > currenty) {
+		sy = 1;
+	}
+	else {
+		sy = -1;
+	}
+	error = dx - dy;
+
+	while (currentx != x || currenty != y) {		
+		
+		temperror = error * 2;
+		if (temperror > -dy) {
+			error -= dy;
+			currentx += sx;
+			/*
+			//if	(threshold < 1 &&
+			if	(
+				!(temperror < dx) &&
+				realEnv.checkHashedMapping(currentx, currenty)
+				) {
+					error += dx; 
+					currenty += sy;
+					//threshold++;
+			}*/
+
+		}
+		if (temperror < dx) {
+			error += dx;
+			currenty += sy;
+			/*
+			//if	(threshold < 1 &&
+			if	(
+				!(temperror > -dy) &&
+				realEnv.checkHashedMapping(currentx, currenty)
+				) {
+					error -= dy;
+					currentx += sx;
+					//threshold++;
+			}*/
+
+		}
+				
+		if (realEnv.checkHashedMapping(currentx, currenty)) {
+			//cout << "current x = " << currentx << "; current y = " << currenty << endl;
+			return getDistance(currentx, currenty, this->getXPos(), this->getYPos());
+		}
+
+		//threshold = 0;
+	}
+
+	return -1;
+};
+
+/*float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
 
 	int currentx = x; 
 	int currenty = y;
@@ -223,17 +365,17 @@ bool Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham'
 			}
 
 		}
-
-		//cout << "current x = " << currentx << "; current y = " << currenty << endl;
+				
 		if (realEnv.checkHashedMapping(currentx, currenty)) {
-			return false;
+			//cout << "current x = " << currentx << "; current y = " << currenty << endl;
+			return getDistance(currentx, currenty, this->getXPos(), this->getYPos());
 		}
 
 		threshold = 0;
 	}
 
-	return true;
-};
+	return -1;
+};*/
 
 float Robot::factorNoise(float occupancyProbability) {
 	if (occupancyProbability == 0) {
