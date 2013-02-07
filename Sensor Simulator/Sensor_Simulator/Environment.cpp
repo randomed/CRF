@@ -21,7 +21,7 @@ void Environment::generateTestMap() {
 	}	
 
 	//add hardcoded features here
-	///*
+	/*
 	for (x = 3; x < 7; x ++) {
 		for (y = 2; y < 4; y ++) {
 			this->setMapping(x, y, 1);
@@ -39,7 +39,16 @@ void Environment::generateTestMap() {
 	addHashedMapping(1, 1);
 	this->setMapping(2, 0, 1);
 	addHashedMapping(2, 0);
-	//*/
+
+	this->setMapping(3, 2, 1);
+	addHashedMapping(3, 2);
+	this->setMapping(3, 3, 1);
+	addHashedMapping(3, 3);
+	this->setMapping(4, 2, 1);
+	addHashedMapping(4, 2);
+	this->setMapping(4, 3, 1);
+	addHashedMapping(4, 3);
+	*/
 	srand(time(NULL));
 
 	//populate randomly

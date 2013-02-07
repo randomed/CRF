@@ -1,12 +1,14 @@
 #include "Robot.h"
 #include <math.h>
 #include <sstream>
+#include <algorithm>
 using namespace std;
 
 float getAngle(int x1, int y1, int x2, int y2);
 float getDistance(int x1, int y1, int x2, int y2);
 float convertNegativeAngles(float angle);
 float convertAngleQuadrant(); //converts angle to be in first quadrant
+
 float getAngle(int x1, int y1, int x2, int y2) { //returns the angle of point 2 relative to point 1
 	/*
 	float deltaX, deltaY, angle;
@@ -84,128 +86,29 @@ float convertNegativeAngles(float angle) {
 
 
 Environment Robot::triggerSensors(Environment *realEnv) { //returns this particular instance of what sensors see
-	/*
-	Environment robotEnv = new Environment(realEnv);
-	unordered_set<string>::iterator it;
-	unordered_set<string> tempMap = realEnv->getHashedMapping();
-	int tempX, tempY, x, y;
-	float angleUpperbound, angleLowerbound, tempAngle;
-	Environment tempEnv;
-	stringstream ss;
-	float pi = atan(1.0) * 4;
-	bool pass = false;
-	float temp;
-	map< int, int> pairs = *new map<int, int>();
-	*/
-	/*
-	//cout << "result: " << rayTrace(realEnv, 4, 3) << endl;
-
-	
-	for (it = tempMap.begin(); it != tempMap.end(); it++) {
-		stringstream((*it).substr(0, (*it).find(" "))) >> tempX;
-		stringstream((*it).substr((*it).find(" "))) >> tempY;
-		if (rayCast(realEnv, tempX, tempY)) { //add node if there is line of sight with the robot
-			robotEnv.setMapping(tempX, tempY, factorNoise());
-		}
-	}
-	*/
-	/*
-	angleUpperbound = convertNegativeAngles(fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2)));
-	if (angleUpperbound == 0) {
-		angleUpperbound = pi * 2;
-	}
-	angleLowerbound =  convertNegativeAngles(fmod(this->getOrientation() - this->getViewAngle() / 2, pi * 2));	
-
-	for (x = this->getXPos() - this->getMaxViewDistance(); x < this->getXPos() + this->getMaxViewDistance() ; x++) {		
-		for (y = this->getYPos() - this->getMaxViewDistance(); y <this->getYPos() + this->getMaxViewDistance() ; y++) {
-	//for (x = this->getXPos(); x < this->getXPos() + this->getMaxViewDistance() ; x++) {		
-		//for (y = this->getYPos(); y <this->getYPos() + this->getMaxViewDistance() ; y++) {
-			tempAngle = getAngle(this->getXPos(), this->getYPos(), x, y);
-			ss << x << " " << y;
-			if (x == 1 && y == 0) {
-				//cout << tempAngle * 180 / pi;
-				//cout << angleUpperbound * 180 / pi;
-				tempAngle = getAngle(this->getXPos(), this->getYPos(), x, y);
-				
-			}
-			if (x == 4 && y == 7) {
-				//cout << tempAngle * 180 / pi;
-				//cout << angleUpperbound * 180 / pi;
-				tempAngle = getAngle(this->getXPos(), this->getYPos(), x, y);				
-			}
-			
-			if (angleUpperbound > angleLowerbound) { //checks angle cases	
-				if (floor(tempAngle * 1000) <= floor(angleUpperbound * 1000)
-					&& floor(tempAngle * 1000) >= floor(angleLowerbound * 1000)) {
-						pass = true;
-				}
-				
-			}
-			else {
-				if (floor(tempAngle * 1000) >= floor(angleLowerbound * 1000)
-					|| floor(tempAngle * 1000) <= floor(angleUpperbound * 1000)) {
-						pass = true;
-				}
-			}
-			if (tempAngle == 0 && angleUpperbound == 2 * pi) { //checks for specific case where point is directly north
-				pass = true;
-			}
-
-			if (pass
-				&& x >= 0 && y >= 0 
-				&& x < realEnv->getGridSizeHorizontal()
-				&& y < realEnv->getGridSizeVertical()
-				&& rayCast(*realEnv, x, y)) 
-			{				
-				this->addAngleDistanceMapping(tempAngle, getDistance(this->getXPos(), this->getYPos(), x, y), factorNoise(realEnv->getMapping(x, y))); //factor noise
-				//cout << "x = " << x << "; y = " << y << "; angle = " << tempAngle << endl;
-			}
-			ss.str("");
-			pass = false;
-		}
-	}
-
-	tempEnv = this->discretiseReadings(*realEnv, this->getAngleDistanceMap()); //discretise the sensor readings
-	this->getRobotEnvironment()->mergeMapping(tempEnv, this->getSensorHistory()); //add new sensor readings to current map
-	this->clearAngleDistanceMap();
-	realEnv->clearHashedMapping2();
-	//cout << "currentx = " << this->getXPos() << "currenty = " << this->getYPos() << endl;
-	//return tempEnv;
-	*/
 	float pi = atan(1.0) * 4;
 	float angleUpperbound, angleLowerbound, currentAngle, convertedAngle, distance;
 	float angleIncrementRadians = this->angleIncrement / (180 / pi);
 	float x, y, roundedX, roundedY;
+	int arraySize = this->viewAngle / this->angleIncrement;
+	vector<pair<float, float>> distances; //map of angle to distance
+	vector<float> sortedDistances;
+	vector<pair<float, float>>::iterator distanceIt;
+	float* ranges;
 	Environment tempEnv;
 
-	//angleUpperbound = fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2));
-	//if (angleUpperbound == 0) {
-	//	angleUpperbound = pi * 2;
-	//}
-	//angleLowerbound =  fmod(this->getOrientation() - this->getViewAngle() / 2, pi * 2);	
-	
-
-
-	/*for (currentAngle = angleUpperbound + (pi / 2);  currentAngle > angleLowerbound + (pi / 2); currentAngle -= angleIncrementRadians) {
-		x = 10 * cos(currentAngle);
-		y = 10 * sin(currentAngle);
-		cout << "point = " << floor(x * 100) / 100 << ", " << floor(y * 100) / 100 << endl;
-	}*/
-	//angleUpperbound = convertNegativeAngles(pi - fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2)) + (pi / 2));
 	angleUpperbound = convertNegativeAngles(fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2)));
 	if (angleUpperbound == 0) {
 		angleUpperbound = pi * 2;
 	}
-	//angleLowerbound = convertNegativeAngles((pi - fmod(this->getOrientation() - this->getViewAngle() / 2, (pi * 2)) + (pi / 2)));
-	angleLowerbound = convertNegativeAngles(fmod(this->getOrientation() - this->getViewAngle() / 2, (pi * 2)));
-	cout << "orientation = " << this->getOrientation() * (180 / pi) << endl;
-	cout << "upperbound = " << angleUpperbound * (180 / pi) << endl;
-	cout << "lowerbound = " << angleLowerbound * (180 / pi) << endl;
-	cout << "increment = " << angleIncrementRadians * (180 / pi) << endl;
 
-	for (currentAngle = 0;  currentAngle <  2 * pi; currentAngle += angleIncrementRadians * 3) { //converted to angles so there are less rounding errors (in angleIncrementRadians) after many iterations
-	//for (currentAngle = angleLowerbound;  currentAngle <  angleUpperbound; currentAngle += angleIncrementRadians * 3) { //converted to angles so there are less rounding errors (in angleIncrementRadians) after many iterations
-		
+	angleLowerbound = convertNegativeAngles(fmod(this->getOrientation() - this->getViewAngle() / 2, (pi * 2)));
+	//cout << "orientation = " << this->getOrientation() * (180 / pi) << endl;
+	//cout << "upperbound = " << angleUpperbound * (180 / pi) << endl;
+	//cout << "lowerbound = " << angleLowerbound * (180 / pi) << endl;
+	//cout << "increment = " << angleIncrementRadians * (180 / pi) << endl;
+
+	for (currentAngle = 0;  currentAngle <  2 * pi; currentAngle += angleIncrementRadians) {//draw circle around the robot to get edges of sensor		
 		//find the edge points of circle around robot using parametric equations
 		x = this->getMaxViewDistance() * cos(currentAngle);
 		y = -this->getMaxViewDistance() * sin(currentAngle);
@@ -225,26 +128,29 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 					&& (convertedAngle < angleUpperbound && convertedAngle > angleLowerbound)
 				)
 			) {
-			this->addAngleDistanceMapping(convertedAngle, distance, realEnv->getMapping(x, y)); //factor noise
-			cout << "point = " << roundedX << ", " << roundedY 
-			<< "\tangle = " << convertedAngle * (180 / pi) << "\tactual angle = " << (pi - (currentAngle + pi / 2)) * (180 / pi) 
-			<< "\tdistance = " << distance << endl;
-		}			
 
-		
+			//cout << "point = " << roundedX << ", " << roundedY 
+			//<< "\tangle = " << convertedAngle * (180 / pi) << "\tactual angle = " << (pi - (currentAngle + pi / 2)) * (180 / pi) 
+			//<< "\tdistance = " << distance << endl;
+			//if ( floor(convertedAngle * (180 / pi)) == 126.0) {
+			//	cout << "here";
+			//}
+			distances.push_back(make_pair(convertedAngle, distance));
+		}		
+	}
+	sort(distances.begin(), distances.end()); //to ROS message specifications
+
+	//make new vector to store distances sorted by ascending angles
+	for (distanceIt = distances.begin(); distanceIt != distances.end(); distanceIt++) {
+		sortedDistances.push_back(distanceIt->second);
 	}
 
-	//##for testing, delete later
-	tempEnv = this->discretiseReadings(*realEnv, this->getAngleDistanceMap()); //discretise the sensor readings
-	//this->getRobotEnvironment()->mergeMapping(tempEnv, this->getSensorHistory()); //add new sensor readings to current map
-	this->environment = tempEnv;
-	this->clearAngleDistanceMap();
-	realEnv->clearHashedMapping2();
-	return tempEnv;
+	ranges = new float[sortedDistances.size()];
+	memcpy(ranges, &sortedDistances.front(), sortedDistances.size() * sizeof( float)); //put vector into array to be communicated across ROS
 
-	return this->getRobotEnvironment();
+	this->environment = this->discretiseReadings(angleLowerbound, angleUpperbound, angleIncrementRadians, 0, this->maxViewDistance, ranges); //discretise the sensor readings
+	return this->environment;
 };
-
 float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
 
 	int currentx = this->getXPos(); 
@@ -311,6 +217,49 @@ float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham
 	}
 
 	return -1;
+};
+vector<pair<int, int>> Robot::rayCast(int x, int y) {
+	int currentx = this->getXPos(); 
+	int currenty = this->getYPos();
+	int dx = abs(x - currentx);
+	int dy = abs(y - currenty);
+	int sx, sy, error, temperror;
+	int threshold = 0;
+	vector<pair<int, int>> nodePath;
+
+	if (x > currentx) {
+		sx = 1;
+	}
+	else {
+		sx = -1;
+	}
+	
+	if (y > currenty) {
+		sy = 1;
+	}
+	else {
+		sy = -1;
+	}
+	error = dx - dy;
+
+	while (currentx != x || currenty != y) {		
+		
+		temperror = error * 2;
+		if (temperror > -dy) {
+			error -= dy;
+			currentx += sx;
+		}
+		if (temperror < dx) {
+			error += dx;
+			currenty += sy;
+		}				
+		//if (getDistance(this->getXPos(), this->getYPos(), currentx, currenty)) {
+		//	//cout << "current x = " << currentx << "; current y = " << currenty << endl;
+		//	return nodePath;
+		//}
+		nodePath.push_back(make_pair(currentx, currenty));
+	}
+	return nodePath;
 };
 
 /*float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
@@ -386,7 +335,6 @@ float Robot::factorNoise(float occupancyProbability) {
 	}
 
 };
-
 void Robot::turn(float angle) {
 	float radians = angle * (atan(1.0) * 4) / 180;
 	float temp = (float) atan(1.0) * 8;
@@ -394,7 +342,6 @@ void Robot::turn(float angle) {
 	this->Orientation = fmod(this->Orientation, (float) atan(1.0) * 8);
 
 }; //turn the robot: clockwise with a positive angle, anti-clockwise with a negative angle
-
 bool Robot::move(Environment *realEnv, int x, int y) { //move the robot: foward with a positive distance, backwards with a negative distance. Returns false if robot cannot move there.
 	int currentx, currenty;
 
@@ -416,7 +363,101 @@ bool Robot::move(Environment *realEnv, int x, int y) { //move the robot: foward 
 	}
 	return true;
 };
+Environment Robot::discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, float ranges[]) {
+	
+	bool debug = true;
+	int range;
+	float distance, angle, deltaX, deltaY;
+	float pi = atan(1.0) * 4;
+	int numRange = (angleMax - angleMin) / angleIncrement;
+	vector<pair<int, int>> pathNodes;
+	vector<pair<int, int>>::iterator nodeRange;
+	bool emptyRange = false; //if the current angle being processed has a empty path
+	map<pair<int, int>, pair<int, int>> occupancyCounter; //contains number of hits for occupied/nonoccuped for each node. nodeCoords : <occupied counter, non occupied counter>
+	map<pair<int, int>, pair<int, int>>::iterator occupancyCounterIterator; //contains number of hits for occupied/nonoccuped for each node. nodeCoords : <occupied counter, non occupied counter>
 
+	for (range = 0; range < numRange; range ++) {
+		distance = floor(ranges[range]);
+		angle = angleMin + angleIncrement * range;
+		emptyRange = false;
+		if (debug) {cout << "angle = " << angle * (180 / pi);}
+
+		if (distance == -1 || distance > rangeMax) { //-1 represents unonccupied ray trace, distance > rangeMax is to account for rounding errors when drawing the circle perimeter during sensor scan
+			distance = rangeMax;
+			emptyRange = true;
+			if (debug) {cout << "\tempty range ";}
+		};
+
+		//conditions for angles
+		if (angle == 0) {
+			deltaY = -distance * cos(angle);
+			deltaX = 0;
+		}
+		if (angle > 0 && angle < pi / 2) {
+			deltaY = -distance * cos(angle);
+			deltaX = distance * sin(angle);
+		}
+		if (angle >= pi / 2 && angle < pi) {
+			//angle = fmod(angle, pi);
+			angle -= pi / 2;
+			deltaY = distance * sin(angle);
+			deltaX = distance * cos(angle);
+		}
+		if (angle >= pi * 2 && angle < pi * (3 / 2)) {
+			//angle = fmod(angle, pi);
+			angle -= (pi / 2) * 2;
+			deltaX = -distance * sin(angle);
+			deltaY = distance * cos(angle);
+		}
+		if (angle >= pi * (3 / 2) && angle < pi * 2) {
+			//angle = fmod(angle, pi);
+			angle -= pi * (3 / 2);
+			deltaY = -distance * sin(angle);
+			deltaX = -distance * cos(angle);
+		}
+		/*deltaX = floor(deltaX * 100) / 100;
+		deltaY = floor(deltaY * 100) / 100;*/
+		deltaX = floor(deltaX + 0.5);
+		deltaY = floor(deltaY + 0.5);
+		
+
+		if (debug) {cout << "\tdistance = " << floor(distance * 100) / 100 << "\tdeltaX = " << deltaX << "\tdeltaY = " << deltaY << endl;}
+		pathNodes = rayCast(deltaX, deltaY);
+
+		for (nodeRange = pathNodes.begin(); nodeRange != pathNodes.end(); nodeRange ++) {
+			occupancyCounterIterator = occupancyCounter.find(*nodeRange);
+			if (occupancyCounterIterator != occupancyCounter.end()) {
+				if (!emptyRange && nodeRange + 1 == pathNodes.end()) { //last node in range should be recorded as occupied in a non empty range
+					occupancyCounter[*nodeRange].first += 1; //increment occupied count
+				}
+				else {
+					occupancyCounter[*nodeRange].second += 1; //increment unoccupied count
+				}
+			}
+			else {
+				if (!emptyRange && nodeRange + 1 == pathNodes.end()) { //last node in range should be recorded as occupied in a non empty range
+					occupancyCounter[*nodeRange].first = 1;
+				}
+				else {
+					if (nodeRange->first == 2 && nodeRange->second == 5) {
+						cout << "here";
+					}
+					occupancyCounter[*nodeRange].second = 1;
+				}
+			}				
+		}
+		
+		//pathNodes = rayCast(2, 0);
+	}
+	for (occupancyCounterIterator = occupancyCounter.begin(); occupancyCounterIterator != occupancyCounter.end(); occupancyCounterIterator ++) { //put occupancy values into mapping
+		this->environment.setMapping(this->getXPos() + occupancyCounterIterator->first.first, this->getXPos() + occupancyCounterIterator->first.second, 
+									occupancyCounterIterator->second.first - occupancyCounterIterator->second.second);
+	}
+	//this->environment.setMapping(1, 0, 2);
+	//this->environment.setMapping(1, 0, 3);
+	//this->environment.addHashedMapping2(1, 0);
+	return this->environment;
+}
 Environment Robot::discretiseReadings(Environment realEnv, map<pair<float, float>, float> angleDistanceMap) {
 	Environment newEnv = new Environment(realEnv);
 	map<pair<float, float>, float>::iterator it;
