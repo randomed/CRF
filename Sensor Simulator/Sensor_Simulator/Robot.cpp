@@ -129,9 +129,9 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 				)
 			) {
 
-			//cout << "point = " << roundedX << ", " << roundedY 
-			//<< "\tangle = " << convertedAngle * (180 / pi) << "\tactual angle = " << (pi - (currentAngle + pi / 2)) * (180 / pi) 
-			//<< "\tdistance = " << distance << endl;
+			cout << "point = " << roundedX << ", " << roundedY 
+			<< "\tangle = " << convertedAngle * (180 / pi) << "\tactual angle = " << (pi - (currentAngle + pi / 2)) * (180 / pi) 
+			<< "\tdistance = " << distance << endl;
 			//if ( floor(convertedAngle * (180 / pi)) == 126.0) {
 			//	cout << "here";
 			//}
@@ -335,6 +335,12 @@ float Robot::factorNoise(float occupancyProbability) {
 	}
 
 };
+float Robot::normaliseOccupancy(float occupancyProbability) {
+	float pi = atan(1.0) * 4;
+	double roundToSigFigs = 2;
+	return floor((0.5 + (1 / pi) * atan(occupancyProbability)) * (pow(10, roundToSigFigs))) / (pow(10, roundToSigFigs));
+};
+
 void Robot::turn(float angle) {
 	float radians = angle * (atan(1.0) * 4) / 180;
 	float temp = (float) atan(1.0) * 8;
@@ -366,7 +372,7 @@ bool Robot::move(Environment *realEnv, int x, int y) { //move the robot: foward 
 Environment Robot::discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, float ranges[]) {
 	
 	bool debug = true;
-	int range;
+	int range, nonNormalisedOccupancy;
 	float distance, angle, deltaX, deltaY;
 	float pi = atan(1.0) * 4;
 	int numRange = (angleMax - angleMin) / angleIncrement;
@@ -377,7 +383,7 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 	map<pair<int, int>, pair<int, int>>::iterator occupancyCounterIterator; //contains number of hits for occupied/nonoccuped for each node. nodeCoords : <occupied counter, non occupied counter>
 
 	for (range = 0; range < numRange; range ++) {
-		distance = floor(ranges[range]);
+		distance = ranges[range];
 		angle = angleMin + angleIncrement * range;
 		emptyRange = false;
 		if (debug) {cout << "angle = " << angle * (180 / pi);}
@@ -417,15 +423,19 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 		}
 		/*deltaX = floor(deltaX * 100) / 100;
 		deltaY = floor(deltaY * 100) / 100;*/
+
 		deltaX = floor(deltaX + 0.5);
 		deltaY = floor(deltaY + 0.5);
 		
 
-		if (debug) {cout << "\tdistance = " << floor(distance * 100) / 100 << "\tdeltaX = " << deltaX << "\tdeltaY = " << deltaY << endl;}
+		if (debug) {cout << "\tdistance = " << distance << "\tdeltaX = " << deltaX << "\tdeltaY = " << deltaY << endl;}
 		pathNodes = rayCast(deltaX, deltaY);
 
 		for (nodeRange = pathNodes.begin(); nodeRange != pathNodes.end(); nodeRange ++) {
 			occupancyCounterIterator = occupancyCounter.find(*nodeRange);
+			if (nodeRange->first == 2 && nodeRange->second == 5) {
+						cout << "here";
+			}
 			if (occupancyCounterIterator != occupancyCounter.end()) {
 				if (!emptyRange && nodeRange + 1 == pathNodes.end()) { //last node in range should be recorded as occupied in a non empty range
 					occupancyCounter[*nodeRange].first += 1; //increment occupied count
@@ -439,9 +449,7 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 					occupancyCounter[*nodeRange].first = 1;
 				}
 				else {
-					if (nodeRange->first == 2 && nodeRange->second == 5) {
-						cout << "here";
-					}
+
 					occupancyCounter[*nodeRange].second = 1;
 				}
 			}				
@@ -449,15 +457,19 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 		
 		//pathNodes = rayCast(2, 0);
 	}
+	
 	for (occupancyCounterIterator = occupancyCounter.begin(); occupancyCounterIterator != occupancyCounter.end(); occupancyCounterIterator ++) { //put occupancy values into mapping
+		nonNormalisedOccupancy = occupancyCounterIterator->second.first - occupancyCounterIterator->second.second;
 		this->environment.setMapping(this->getXPos() + occupancyCounterIterator->first.first, this->getXPos() + occupancyCounterIterator->first.second, 
-									occupancyCounterIterator->second.first - occupancyCounterIterator->second.second);
+									normaliseOccupancy(nonNormalisedOccupancy));
 	}
 	//this->environment.setMapping(1, 0, 2);
 	//this->environment.setMapping(1, 0, 3);
 	//this->environment.addHashedMapping2(1, 0);
 	return this->environment;
 }
+
+
 Environment Robot::discretiseReadings(Environment realEnv, map<pair<float, float>, float> angleDistanceMap) {
 	Environment newEnv = new Environment(realEnv);
 	map<pair<float, float>, float>::iterator it;

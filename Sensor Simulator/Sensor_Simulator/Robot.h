@@ -65,4 +65,5 @@ public:
 	float factorNoise(float occupancyProbability);
 	map<pair<int, int>, list<float>> getSensorHistory() {return this->sensorHistory;};
 	void addSensorHistory(int x, int y, float occupancyProbability) {this->sensorHistory[make_pair(x, y)].push_back(occupancyProbability);};
+	float normaliseOccupancy(float occupancyProbability);
 };

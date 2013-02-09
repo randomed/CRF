@@ -21,54 +21,54 @@ void Environment::generateTestMap() {
 	}	
 
 	//add hardcoded features here
-	/*
-	for (x = 3; x < 7; x ++) {
-		for (y = 2; y < 4; y ++) {
-			this->setMapping(x, y, 1);
-			addHashedMapping(x, y);
-		}
-	}	
-	for (x = 1; x < 3; x ++) {
-		for (y = 5; y < 8; y ++) {
-			this->setMapping(x, y, 1);
-			addHashedMapping(x, y);
-		}
-	}	
+	
+	//for (x = 3; x < 7; x ++) {
+	//	for (y = 2; y < 4; y ++) {
+	//		this->setMapping(x, y, 1);
+	//		addHashedMapping(x, y);
+	//	}
+	//}	
+	//for (x = 1; x < 3; x ++) {
+	//	for (y = 5; y < 8; y ++) {
+	//		this->setMapping(x, y, 1);
+	//		addHashedMapping(x, y);
+	//	}
+	//}	
 
-	this->setMapping(1, 1, 1);
-	addHashedMapping(1, 1);
-	this->setMapping(2, 0, 1);
-	addHashedMapping(2, 0);
+	this->setMapping(2, 1, 1);
+	addHashedMapping(2, 1);
+	this->setMapping(2, 2, 1);
+	addHashedMapping(2, 2);
 
-	this->setMapping(3, 2, 1);
-	addHashedMapping(3, 2);
-	this->setMapping(3, 3, 1);
-	addHashedMapping(3, 3);
-	this->setMapping(4, 2, 1);
-	addHashedMapping(4, 2);
-	this->setMapping(4, 3, 1);
-	addHashedMapping(4, 3);
-	*/
+	this->setMapping(2, 3, 1);
+	addHashedMapping(2, 3);
+	this->setMapping(2, 4, 1);
+	addHashedMapping(2, 4);
+	this->setMapping(2, 5, 1);
+	addHashedMapping(2, 5);
+	this->setMapping(2, 6, 1);
+	addHashedMapping(2, 6);
+	
 	srand(time(NULL));
 
 	//populate randomly
-	int randomx, randomy;
-	y = 0;
-	x = 0;
-	for (int i = 0; i < 2; i ++) {
-		x = rand() % (this->gridSizeHorizontal - 1);
-		//randomx = 1 + x + (rand() % (this->gridSizeHorizontal - x));
-		randomx =  1 + x + rand() % 10;
-		for (;x < randomx; x ++) {
-			y = rand() % (this->gridSizeVertical - 1);
-			//randomy = 1 + y + (rand() % (this->gridSizeVertical - y));
-			randomy =  1 + y + rand() % 10;
-			for (;y < randomy; y ++) {
-				this->setMapping(x, y, 1);
-				addHashedMapping(x, y);
-			}
-		}
-	}	
+	//int randomx, randomy;
+	//y = 0;
+	//x = 0;
+	//for (int i = 0; i < 2; i ++) {
+	//	x = rand() % (this->gridSizeHorizontal - 1);
+	//	//randomx = 1 + x + (rand() % (this->gridSizeHorizontal - x));
+	//	randomx =  1 + x + rand() % 10;
+	//	for (;x < randomx; x ++) {
+	//		y = rand() % (this->gridSizeVertical - 1);
+	//		//randomy = 1 + y + (rand() % (this->gridSizeVertical - y));
+	//		randomy =  1 + y + rand() % 10;
+	//		for (;y < randomy; y ++) {
+	//			this->setMapping(x, y, 1);
+	//			addHashedMapping(x, y);
+	//		}
+	//	}
+	//}	
 };
 
 void Environment::generateUnknownMap() {
