@@ -112,26 +112,26 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 		//find the edge points of circle around robot using parametric equations
 		x = this->getMaxViewDistance() * cos(currentAngle);
 		y = -this->getMaxViewDistance() * sin(currentAngle);
-		roundedX = floor(x + 0.5);
-		roundedY = floor(y + 0.5);
+		roundedX = this->getXPos() + floor(x + 0.5);
+		roundedY = this->getYPos() + floor(y + 0.5);
 
 		convertedAngle = convertNegativeAngles((pi - (currentAngle + pi / 2))); //converts the angle to be viewed from 1st quadrant increasing clockwise
 		distance = rayCast(*realEnv, roundedX, roundedY);
 		//check if angle is in range
 		if (	(	
-					angleUpperbound < angleLowerbound
-					&& (convertedAngle < angleUpperbound || convertedAngle > angleLowerbound)
+					angleUpperbound <= angleLowerbound
+					&& (convertedAngle <= angleUpperbound || convertedAngle >= angleLowerbound)
 				)
 				||
 				(	
-					angleUpperbound > angleLowerbound
-					&& (convertedAngle < angleUpperbound && convertedAngle > angleLowerbound)
+					angleUpperbound >= angleLowerbound
+					&& (convertedAngle <= angleUpperbound && convertedAngle >= angleLowerbound)
 				)
 			) {
 
-			cout << "point = " << roundedX << ", " << roundedY 
-			<< "\tangle = " << convertedAngle * (180 / pi) << "\tactual angle = " << (pi - (currentAngle + pi / 2)) * (180 / pi) 
-			<< "\tdistance = " << distance << endl;
+			//cout << "point = " << roundedX << ", " << roundedY 
+			//<< "\tangle = " << convertedAngle * (180 / pi) << "\tactual angle = " << (pi - (currentAngle + pi / 2)) * (180 / pi) 
+			//<< "\tdistance = " << distance << endl;
 			//if ( floor(convertedAngle * (180 / pi)) == 126.0) {
 			//	cout << "here";
 			//}
@@ -371,11 +371,11 @@ bool Robot::move(Environment *realEnv, int x, int y) { //move the robot: foward 
 };
 Environment Robot::discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, float ranges[]) {
 	
-	bool debug = true;
+	bool debug = false;
 	int range, nonNormalisedOccupancy;
-	float distance, angle, deltaX, deltaY;
+	float distance, angle, deltaX, deltaY, trueAngle;
 	float pi = atan(1.0) * 4;
-	int numRange = (angleMax - angleMin) / angleIncrement;
+	int numRange = abs((angleMax - angleMin) / angleIncrement);
 	vector<pair<int, int>> pathNodes;
 	vector<pair<int, int>>::iterator nodeRange;
 	bool emptyRange = false; //if the current angle being processed has a empty path
@@ -384,7 +384,8 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 
 	for (range = 0; range < numRange; range ++) {
 		distance = ranges[range];
-		angle = angleMin + angleIncrement * range;
+		angle = fmod(angleMin + angleIncrement * range, 2 * pi);
+		trueAngle = angle;
 		emptyRange = false;
 		if (debug) {cout << "angle = " << angle * (180 / pi);}
 
@@ -405,37 +406,67 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 		}
 		if (angle >= pi / 2 && angle < pi) {
 			//angle = fmod(angle, pi);
+			//angle = pi / 2 - angle;
 			angle -= pi / 2;
 			deltaY = distance * sin(angle);
 			deltaX = distance * cos(angle);
 		}
-		if (angle >= pi * 2 && angle < pi * (3 / 2)) {
+		if (angle >= pi && angle < pi * (float(3) / 2)) {
 			//angle = fmod(angle, pi);
 			angle -= (pi / 2) * 2;
 			deltaX = -distance * sin(angle);
 			deltaY = distance * cos(angle);
 		}
-		if (angle >= pi * (3 / 2) && angle < pi * 2) {
+
+		if (angle >= pi * (float(3) / 2) && angle < pi * 2) {
 			//angle = fmod(angle, pi);
-			angle -= pi * (3 / 2);
+			angle -= pi * (float(3) / 2);
 			deltaY = -distance * sin(angle);
 			deltaX = -distance * cos(angle);
 		}
 		/*deltaX = floor(deltaX * 100) / 100;
 		deltaY = floor(deltaY * 100) / 100;*/
-
+		//rounds based on which quadrant the angle is closer to
+		
+		//if (trueAngle < pi / 4) {
+		//	deltaX = floor(deltaX);
+		//	//deltaY = floor(deltaY);
+		//} 
+		//else if (trueAngle > pi / 4 && trueAngle < pi / 2) {
+		//	//deltaX = floor(deltaX + 0.5);
+		//	deltaY = floor(deltaY + 0.5);
+		//}
+		//else if (trueAngle > pi / 2 && trueAngle < 3 * pi / 4) {
+		//	//deltaX = floor(deltaX + 0.5);
+		//	deltaY = floor(deltaY);
+		//}
+		//else if (trueAngle > 3 * pi / 4 && trueAngle < pi) {			
+		//	deltaX = floor(deltaX);
+		//}
+		//else if (trueAngle > pi && trueAngle < 5 * pi / 4) {			
+		//	deltaX = floor(deltaX + 0.5);
+		//}
+		//else if (trueAngle > 5 * pi / 4 && trueAngle < 3 * pi / 2) {			
+		//	deltaY = floor(deltaY);
+		//}
+		//else if (trueAngle > 3 * pi / 2 && trueAngle < 7 * pi / 4) {			
+		//	deltaY = floor(deltaY + 0.5);
+		//}
+		//else if (trueAngle > 7 * pi / 4 && trueAngle < 2 * pi) {			
+		//	deltaX = floor(deltaX + 0.5);
+		//}
 		deltaX = floor(deltaX + 0.5);
 		deltaY = floor(deltaY + 0.5);
 		
 
 		if (debug) {cout << "\tdistance = " << distance << "\tdeltaX = " << deltaX << "\tdeltaY = " << deltaY << endl;}
-		pathNodes = rayCast(deltaX, deltaY);
+		pathNodes = rayCast(this->getXPos() + deltaX, this->getYPos() + deltaY);
 
 		for (nodeRange = pathNodes.begin(); nodeRange != pathNodes.end(); nodeRange ++) {
 			occupancyCounterIterator = occupancyCounter.find(*nodeRange);
-			if (nodeRange->first == 2 && nodeRange->second == 5) {
-						cout << "here";
-			}
+			//if (nodeRange->first == 1 && nodeRange->second == 4) {
+			//			cout << "here";
+			//}
 			if (occupancyCounterIterator != occupancyCounter.end()) {
 				if (!emptyRange && nodeRange + 1 == pathNodes.end()) { //last node in range should be recorded as occupied in a non empty range
 					occupancyCounter[*nodeRange].first += 1; //increment occupied count
@@ -457,10 +488,10 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 		
 		//pathNodes = rayCast(2, 0);
 	}
-	
+	this->environment.generateUnknownMap();
 	for (occupancyCounterIterator = occupancyCounter.begin(); occupancyCounterIterator != occupancyCounter.end(); occupancyCounterIterator ++) { //put occupancy values into mapping
 		nonNormalisedOccupancy = occupancyCounterIterator->second.first - occupancyCounterIterator->second.second;
-		this->environment.setMapping(this->getXPos() + occupancyCounterIterator->first.first, this->getXPos() + occupancyCounterIterator->first.second, 
+		this->environment.setMapping(occupancyCounterIterator->first.first, occupancyCounterIterator->first.second, 
 									normaliseOccupancy(nonNormalisedOccupancy));
 	}
 	//this->environment.setMapping(1, 0, 2);

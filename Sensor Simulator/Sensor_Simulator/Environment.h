@@ -29,7 +29,7 @@ public:
 		generateUnknownMap();
 	};
 	void generateTestMap();
-	void Environment::generateUnknownMap();
+	void generateUnknownMap();
 	void printMap();
 
 	void setMapping(int x, int y, float probability) {

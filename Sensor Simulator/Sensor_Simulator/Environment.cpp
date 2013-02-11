@@ -35,40 +35,40 @@ void Environment::generateTestMap() {
 	//	}
 	//}	
 
-	this->setMapping(2, 1, 1);
-	addHashedMapping(2, 1);
-	this->setMapping(2, 2, 1);
-	addHashedMapping(2, 2);
+	//this->setMapping(2, 1, 1);
+	//addHashedMapping(2, 1);
+	//this->setMapping(2, 2, 1);
+	//addHashedMapping(2, 2);
 
-	this->setMapping(2, 3, 1);
-	addHashedMapping(2, 3);
-	this->setMapping(2, 4, 1);
-	addHashedMapping(2, 4);
-	this->setMapping(2, 5, 1);
-	addHashedMapping(2, 5);
-	this->setMapping(2, 6, 1);
-	addHashedMapping(2, 6);
+	//this->setMapping(2, 3, 1);
+	//addHashedMapping(2, 3);
+	//this->setMapping(2, 4, 1);
+	//addHashedMapping(2, 4);
+	//this->setMapping(2, 5, 1);
+	//addHashedMapping(2, 5);
+	//this->setMapping(2, 6, 1);
+	//addHashedMapping(2, 6);
 	
 	srand(time(NULL));
 
 	//populate randomly
-	//int randomx, randomy;
-	//y = 0;
-	//x = 0;
-	//for (int i = 0; i < 2; i ++) {
-	//	x = rand() % (this->gridSizeHorizontal - 1);
-	//	//randomx = 1 + x + (rand() % (this->gridSizeHorizontal - x));
-	//	randomx =  1 + x + rand() % 10;
-	//	for (;x < randomx; x ++) {
-	//		y = rand() % (this->gridSizeVertical - 1);
-	//		//randomy = 1 + y + (rand() % (this->gridSizeVertical - y));
-	//		randomy =  1 + y + rand() % 10;
-	//		for (;y < randomy; y ++) {
-	//			this->setMapping(x, y, 1);
-	//			addHashedMapping(x, y);
-	//		}
-	//	}
-	//}	
+	int randomx, randomy;
+	y = 0;
+	x = 0;
+	for (int i = 0; i < 2; i ++) {
+		x = rand() % (this->gridSizeHorizontal - 1);
+		//randomx = 1 + x + (rand() % (this->gridSizeHorizontal - x));
+		randomx =  1 + x + rand() % 10;
+		for (;x < randomx; x ++) {
+			y = rand() % (this->gridSizeVertical - 1);
+			//randomy = 1 + y + (rand() % (this->gridSizeVertical - y));
+			randomy =  1 + y + rand() % 10;
+			for (;y < randomy; y ++) {
+				this->setMapping(x, y, 1);
+				addHashedMapping(x, y);
+			}
+		}
+	}	
 };
 
 void Environment::generateUnknownMap() {
