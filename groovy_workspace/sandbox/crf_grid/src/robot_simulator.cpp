@@ -1,6 +1,9 @@
 #include "robot_simulator.h"
 
-void publishEnvironmentTopic(Environment robotEnv) {
+/*
+* Creates node and publishes topic, allows grid to be displayed in rviz.
+*/
+void publishEnvironmentTopic(Environment *robotEnv) {
 	/*float cell_width = 1;
 	float cell_height = 1;
 	std::vector<geometry_msgs::Point> points;
@@ -51,6 +54,21 @@ void publishEnvironmentTopic(Environment robotEnv) {
 	loop_rate.sleep();
 	++count;
   }*/
+	int x, y;
+	float cell_width = 1;
+	float cell_height = 1;
+	std::vector<geometry_msgs::Point> points;
+	geometry_msgs::Point current_point;
+	current_point.z = 0;
+	for (y = 0; y < robotEnv->getGridSizeVertical(); y++) {
+		for (x = 0; x < robotEnv->getGridSizeHorizontal(); x++) {
+			current_point.x = x;
+			current_point,y = y;
+			points.push_back(current_point);
+		}
+		
+	}
+
 };
 
 int main(int argc, char **argv)
