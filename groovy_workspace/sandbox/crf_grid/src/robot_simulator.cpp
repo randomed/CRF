@@ -4,71 +4,73 @@
 * Creates node and publishes topic, allows grid to be displayed in rviz.
 */
 void publishEnvironmentTopic(Environment *robotEnv) {
-	/*float cell_width = 1;
+	int x, y, messageCount = 0;
+	float cell_width = 1;
 	float cell_height = 1;
-	std::vector<geometry_msgs::Point> points;
-	geometry_msgs::Point point;
-	nav_msgs::GridCells msg;
+	nav_msgs::GridCells gridCellsMessage;
 	ros::NodeHandle n;
+	std::vector<geometry_msgs::Point> points;
+	geometry_msgs::Point current_point;
+
+	gridCellsMessage.cell_width = cell_width;
+	gridCellsMessage.cell_height = cell_height;
+	current_point.z = 0;
 	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(GRIDCELLTOPIC, 1000);
 	ros::Rate loop_rate(10);
 
-	msg.cell_width = cell_width;
-	msg.cell_height = cell_height;
-	int count = 0;
-	while (ros::ok())  {
-		msg.header.frame_id = "my_frame";
-		msg.header.stamp = ros::Time::now();
-
-		ROS_INFO("count: %d", count);
-		if (count < 10) {
-			point.x = 20;
-			point.y = 20;
-			point.z = 0;
-
-			points.push_back(point);
-			point.x = 0;
-			point.y = 0;
-			point.z = 0;
-			points.push_back(point);
-
-			msg.cells = points;
-		}
-		else {
-			cell_width = 1;
-			cell_height = 1;
-			msg.cell_width = cell_width;
-			msg.cell_height = cell_height;
-
-			point.x = 10;
-			point.y = 10;
-			point.z = 0;
-			points.clear();
-			points.push_back(point);				  
-			msg.cells = points;
-		}
-	
-	chatter_pub.publish(msg);
-
-	ros::spinOnce();
-	loop_rate.sleep();
-	++count;
-  }*/
-	int x, y;
-	float cell_width = 1;
-	float cell_height = 1;
-	std::vector<geometry_msgs::Point> points;
-	geometry_msgs::Point current_point;
-	current_point.z = 0;
 	for (y = 0; y < robotEnv->getGridSizeVertical(); y++) {
 		for (x = 0; x < robotEnv->getGridSizeHorizontal(); x++) {
-			current_point.x = x;
-			current_point,y = y;
-			points.push_back(current_point);
+			if (robotEnv->checkHashedMapping(x, y)) {
+				current_point.x = x;
+				current_point.y = y;
+				points.push_back(current_point);
+			}
 		}
-		
 	}
+	gridCellsMessage.header.frame_id = "my_frame";
+	gridCellsMessage.header.stamp = ros::Time::now();
+	gridCellsMessage.cells = points;
 
+	while (ros::ok() && messageCount < 5)  {
+		chatter_pub.publish(gridCellsMessage);
+			
+		ros::spinOnce();
+		loop_rate.sleep();
+		messageCount ++;
+	}
+};
+/*
+* Utility function to put a marker of ground truth robot position
+*/
+void publishRobotGroundTruthTopic(Environment *robotEnv) {
+	int messageCount = 0;
+	float cell_width = 1;
+	float cell_height = 1;
+	nav_msgs::GridCells gridCellsMessage;
+	ros::NodeHandle n;
+	std::vector<geometry_msgs::Point> points;
+	geometry_msgs::Point robot_point;
+	gridCellsMessage.cell_width = cell_width;
+	gridCellsMessage.cell_height = cell_height;
+	robot_point.z = 0;
+	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(ROBOTGROUNDTRUTHTOPIC, 1000);
+	ros::Rate loop_rate(10);
+
+	robot_point.x = robotEnv->getRobotX();
+	robot_point.y = robotEnv->getRobotY();
+	points.push_back(robot_point);
+	
+	gridCellsMessage.header.frame_id = "my_frame";
+	gridCellsMessage.header.stamp = ros::Time::now();
+	gridCellsMessage.cells = points;
+
+	while (ros::ok() && messageCount < 5)  {
+		chatter_pub.publish(gridCellsMessage);
+			
+		ros::spinOnce();
+		loop_rate.sleep();
+		messageCount ++;
+	}
 };
 
 int main(int argc, char **argv)
@@ -79,7 +81,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "gridcell_sender");
 	
 	publishEnvironmentTopic(env);
-	
+	publishRobotGroundTruthTopic(env);	
 	return 0;
 };
 

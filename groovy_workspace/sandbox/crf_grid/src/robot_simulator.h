@@ -4,6 +4,8 @@
 #include <vector>
 #include <sstream>
 #include "Robot.h"
-#define GRIDCELLTOPIC "testdraw"
+
+#define GRIDCELLTOPIC "draw_simulator"
+#define ROBOTGROUNDTRUTHTOPIC "ground_truth_robot_position"
 
 void publishEnvironmentTopic(Environment robotEnv);

@@ -9,8 +9,8 @@ float negativeInverseExponential(float x) {
 };
 
 Environment::Environment() {
-	this->gridSizeHorizontal = 8;
-	this->gridSizeVertical = 8;
+	this->gridSizeHorizontal = 100;
+	this->gridSizeVertical = 100;
 	this->robotCoords = make_pair(0, 0);	
 	this->generateTestMap();
 };
