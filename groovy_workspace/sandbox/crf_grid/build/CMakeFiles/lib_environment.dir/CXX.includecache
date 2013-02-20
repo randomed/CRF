@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp
+algorithm
+-
+time.h
+-
+Environment.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.h
+
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.h
+map
+-
+iostream
+-
+unordered_set
+-
+string
+-
+sstream
+-
+list
+-
+
