@@ -28,6 +28,16 @@ sstream
 list
 -
 
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.cpp
+math.h
+-
+sstream
+-
+algorithm
+-
+Robot.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.h
+
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.h
 iostream
 -
@@ -39,6 +49,8 @@ Environment.cpp
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp
 nav_msgs/Odometry.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/nav_msgs/Odometry.h
+sensor_msgs/LaserScan.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/sensor_msgs/LaserScan.h
 
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
 robot_simulator.h
@@ -55,8 +67,10 @@ vector
 -
 sstream
 -
-Robot.h
-/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.h
+Robot.cpp
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.cpp
+sensor_msgs/LaserScan.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/sensor_msgs/LaserScan.h
 
 /opt/ros/groovy/include/XmlRpcDecl.h
 ros/macros.h
@@ -833,6 +847,24 @@ ros/forwards.h
 /opt/ros/groovy/include/ros/ros/forwards.h
 
 /opt/ros/groovy/include/rosconsole/macros_generated.h
+
+/opt/ros/groovy/include/sensor_msgs/LaserScan.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+std_msgs/Header.h
+-
 
 /opt/ros/groovy/include/std_msgs/Header.h
 string

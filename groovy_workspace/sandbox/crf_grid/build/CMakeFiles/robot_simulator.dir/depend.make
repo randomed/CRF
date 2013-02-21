@@ -3,6 +3,7 @@
 
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/Environment.cpp
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/Environment.h
+CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/Robot.cpp
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/Robot.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/robot_simulator.cpp
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/robot_simulator.h
@@ -69,5 +70,6 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/includ
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/ros/wall_timer.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/ros/wall_timer_options.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/rosconsole/macros_generated.h
+CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/sensor_msgs/LaserScan.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/std_msgs/Header.h
 

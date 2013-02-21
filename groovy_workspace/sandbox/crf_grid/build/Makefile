@@ -189,17 +189,43 @@ doxygen/fast:
 .PHONY : doxygen/fast
 
 #=============================================================================
-# Target rules for targets named lib_environment
+# Target rules for targets named environment
 
 # Build rule for target.
-lib_environment: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 lib_environment
-.PHONY : lib_environment
+environment: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 environment
+.PHONY : environment
 
 # fast build rule for target.
-lib_environment/fast:
-	$(MAKE) -f CMakeFiles/lib_environment.dir/build.make CMakeFiles/lib_environment.dir/build
-.PHONY : lib_environment/fast
+environment/fast:
+	$(MAKE) -f CMakeFiles/environment.dir/build.make CMakeFiles/environment.dir/build
+.PHONY : environment/fast
+
+#=============================================================================
+# Target rules for targets named grid_processor
+
+# Build rule for target.
+grid_processor: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 grid_processor
+.PHONY : grid_processor
+
+# fast build rule for target.
+grid_processor/fast:
+	$(MAKE) -f CMakeFiles/grid_processor.dir/build.make CMakeFiles/grid_processor.dir/build
+.PHONY : grid_processor/fast
+
+#=============================================================================
+# Target rules for targets named robot
+
+# Build rule for target.
+robot: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 robot
+.PHONY : robot
+
+# fast build rule for target.
+robot/fast:
+	$(MAKE) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/build
+.PHONY : robot/fast
 
 #=============================================================================
 # Target rules for targets named robot_simulator
@@ -427,7 +453,7 @@ src/Environment.o: src/Environment.cpp.o
 
 # target to build an object file
 src/Environment.cpp.o:
-	$(MAKE) -f CMakeFiles/lib_environment.dir/build.make CMakeFiles/lib_environment.dir/src/Environment.cpp.o
+	$(MAKE) -f CMakeFiles/environment.dir/build.make CMakeFiles/environment.dir/src/Environment.cpp.o
 .PHONY : src/Environment.cpp.o
 
 src/Environment.i: src/Environment.cpp.i
@@ -435,7 +461,7 @@ src/Environment.i: src/Environment.cpp.i
 
 # target to preprocess a source file
 src/Environment.cpp.i:
-	$(MAKE) -f CMakeFiles/lib_environment.dir/build.make CMakeFiles/lib_environment.dir/src/Environment.cpp.i
+	$(MAKE) -f CMakeFiles/environment.dir/build.make CMakeFiles/environment.dir/src/Environment.cpp.i
 .PHONY : src/Environment.cpp.i
 
 src/Environment.s: src/Environment.cpp.s
@@ -443,8 +469,56 @@ src/Environment.s: src/Environment.cpp.s
 
 # target to generate assembly for a file
 src/Environment.cpp.s:
-	$(MAKE) -f CMakeFiles/lib_environment.dir/build.make CMakeFiles/lib_environment.dir/src/Environment.cpp.s
+	$(MAKE) -f CMakeFiles/environment.dir/build.make CMakeFiles/environment.dir/src/Environment.cpp.s
 .PHONY : src/Environment.cpp.s
+
+src/Robot.o: src/Robot.cpp.o
+.PHONY : src/Robot.o
+
+# target to build an object file
+src/Robot.cpp.o:
+	$(MAKE) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/src/Robot.cpp.o
+.PHONY : src/Robot.cpp.o
+
+src/Robot.i: src/Robot.cpp.i
+.PHONY : src/Robot.i
+
+# target to preprocess a source file
+src/Robot.cpp.i:
+	$(MAKE) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/src/Robot.cpp.i
+.PHONY : src/Robot.cpp.i
+
+src/Robot.s: src/Robot.cpp.s
+.PHONY : src/Robot.s
+
+# target to generate assembly for a file
+src/Robot.cpp.s:
+	$(MAKE) -f CMakeFiles/robot.dir/build.make CMakeFiles/robot.dir/src/Robot.cpp.s
+.PHONY : src/Robot.cpp.s
+
+src/grid_processor.o: src/grid_processor.cpp.o
+.PHONY : src/grid_processor.o
+
+# target to build an object file
+src/grid_processor.cpp.o:
+	$(MAKE) -f CMakeFiles/grid_processor.dir/build.make CMakeFiles/grid_processor.dir/src/grid_processor.cpp.o
+.PHONY : src/grid_processor.cpp.o
+
+src/grid_processor.i: src/grid_processor.cpp.i
+.PHONY : src/grid_processor.i
+
+# target to preprocess a source file
+src/grid_processor.cpp.i:
+	$(MAKE) -f CMakeFiles/grid_processor.dir/build.make CMakeFiles/grid_processor.dir/src/grid_processor.cpp.i
+.PHONY : src/grid_processor.cpp.i
+
+src/grid_processor.s: src/grid_processor.cpp.s
+.PHONY : src/grid_processor.s
+
+# target to generate assembly for a file
+src/grid_processor.cpp.s:
+	$(MAKE) -f CMakeFiles/grid_processor.dir/build.make CMakeFiles/grid_processor.dir/src/grid_processor.cpp.s
+.PHONY : src/grid_processor.cpp.s
 
 src/robot_simulator.o: src/robot_simulator.cpp.o
 .PHONY : src/robot_simulator.o
@@ -481,12 +555,14 @@ help:
 	@echo "... clean_test_results"
 	@echo "... doxygen"
 	@echo "... edit_cache"
+	@echo "... environment"
+	@echo "... grid_processor"
 	@echo "... install"
 	@echo "... install/local"
 	@echo "... install/strip"
-	@echo "... lib_environment"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... robot"
 	@echo "... robot_simulator"
 	@echo "... rosbuild_clean-test-results"
 	@echo "... rosbuild_precompile"
@@ -507,6 +583,12 @@ help:
 	@echo "... src/Environment.o"
 	@echo "... src/Environment.i"
 	@echo "... src/Environment.s"
+	@echo "... src/Robot.o"
+	@echo "... src/Robot.i"
+	@echo "... src/Robot.s"
+	@echo "... src/grid_processor.o"
+	@echo "... src/grid_processor.i"
+	@echo "... src/grid_processor.s"
 	@echo "... src/robot_simulator.o"
 	@echo "... src/robot_simulator.i"
 	@echo "... src/robot_simulator.s"

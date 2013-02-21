@@ -255,7 +255,7 @@ _CATKIN_GTEST_INCLUDE:FILEPATH=_CATKIN_GTEST_INCLUDE-NOTFOUND
 _CATKIN_GTEST_SRC:FILEPATH=/usr/src/gtest/src/gtest.cc
 
 //Path to a file.
-_file_name:FILEPATH=/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
+_file_name:FILEPATH=/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/grid_processor.cpp
 
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/groovy/share/catkin/cmake
@@ -265,6 +265,9 @@ crf_grid_BINARY_DIR:STATIC=/home/random/CRF/groovy_workspace/sandbox/crf_grid/bu
 
 //Value Computed by CMake
 crf_grid_SOURCE_DIR:STATIC=/home/random/CRF/groovy_workspace/sandbox/crf_grid
+
+//Dependencies for the target
+environment_LIB_DEPENDS:STATIC=general;roscpp;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;
 
 //The directory containing a CMake configuration file for gencpp.
 gencpp_DIR:PATH=/opt/ros/groovy/share/gencpp/cmake
@@ -308,6 +311,12 @@ lib:FILEPATH=/opt/ros/groovy/lib/libroslib.so
 
 //Dependencies for the target
 lib_environment_LIB_DEPENDS:STATIC=general;roscpp;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;
+
+//Dependencies for the target
+lib_robot_LIB_DEPENDS:STATIC=general;roscpp;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;
+
+//Dependencies for the target
+robot_LIB_DEPENDS:STATIC=general;roscpp;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;
 
 //The directory containing a CMake configuration file for roslib.
 roslib_DIR:PATH=/opt/ros/groovy/share/roslib/cmake

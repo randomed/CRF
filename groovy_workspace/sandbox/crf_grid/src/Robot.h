@@ -3,6 +3,8 @@
 #include <map>
 #include "Environment.cpp"
 #include "nav_msgs/Odometry.h"
+#include "sensor_msgs/LaserScan.h"
+
 using namespace std;
 
 class Robot {
@@ -17,7 +19,8 @@ protected:
 	float viewAngle;
 	int maxViewDistance;
 	float angleIncrement; //how much to increase the angle by at each reading, in degrees
-	nav_msgs::Odometry odometry;	
+	nav_msgs::Odometry odometry;
+	sensor_msgs::LaserScan laserScan;		
 public:
 	Robot() {
 //		float pi = (atan(1.0) * 4);
@@ -63,6 +66,7 @@ public:
 	//void clearAngleDistanceMap() {this->angleDistanceMap.clear();};
 	int getXPos() {return this->coords.first;};
 	int getYPos() {return this->coords.second;};
+	sensor_msgs::LaserScan getLaserScan() {return this->laserScan;};
 	float factorNoise(float occupancyProbability);
 	map<pair<int, int>, list<float>> getSensorHistory() {return this->sensorHistory;};
 	void addSensorHistory(int x, int y, float occupancyProbability) {this->sensorHistory[make_pair(x, y)].push_back(occupancyProbability);};

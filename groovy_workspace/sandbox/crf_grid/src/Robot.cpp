@@ -91,7 +91,7 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 	float angleUpperbound, angleLowerbound, currentAngle, convertedAngle, distance;
 	float angleIncrementRadians = this->angleIncrement / (180 / pi);
 	float x, y, roundedX, roundedY;
-	int arraySize = this->viewAngle / this->angleIncrement;
+//	int arraySize = this->viewAngle / this->angleIncrement;
 	vector<pair<float, float>> distances; //map of angle to distance
 	vector<float> sortedDistances;
 	vector<pair<float, float>>::iterator distanceIt;
@@ -149,7 +149,15 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 	ranges = new float[sortedDistances.size()];
 	memcpy(ranges, &sortedDistances.front(), sortedDistances.size() * sizeof( float)); //put vector into array to be communicated across ROS
 
-	this->environment = this->discretiseReadings(angleLowerbound, angleUpperbound, angleIncrementRadians, 0, this->maxViewDistance, ranges); //discretise the sensor readings
+//	this->environment = this->discretiseReadings(angleLowerbound, angleUpperbound, angleIncrementRadians, 0, this->maxViewDistance, ranges); //discretise the sensor readings
+
+	this->laserScan.angle_min = angleLowerbound;
+	this->laserScan.angle_max = angleUpperbound;
+	this->laserScan.angle_increment = angleIncrementRadians;
+	this->laserScan.range_min = 0;
+	this->laserScan.range_max = this->maxViewDistance;
+	this->laserScan.ranges = sortedDistances;
+	
 	return this->environment;
 };
 float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
@@ -159,7 +167,7 @@ float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham
 	int dx = abs(x - currentx);
 	int dy = abs(y - currenty);
 	int sx, sy, error, temperror;
-	int threshold = 0;
+//	int threshold = 0;
 	if (x > currentx) {
 		sx = 1;
 	}
@@ -225,7 +233,7 @@ vector<pair<int, int>> Robot::rayCast(int x, int y) {
 	int dx = abs(x - currentx);
 	int dy = abs(y - currenty);
 	int sx, sy, error, temperror;
-	int threshold = 0;
+//	int threshold = 0;
 	vector<pair<int, int>> nodePath;
 
 	if (x > currentx) {
@@ -344,7 +352,7 @@ float Robot::normaliseOccupancy(float occupancyProbability) {
 
 void Robot::turn(float angle) {
 	float radians = angle * (atan(1.0) * 4) / 180;
-	float temp = (float) atan(1.0) * 8;
+//	float temp = (float) atan(1.0) * 8;
 	this->Orientation += radians;
 	this->Orientation = fmod(this->Orientation, (float) atan(1.0) * 8);
 
@@ -374,7 +382,8 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 	
 	bool debug = false;
 	int range, nonNormalisedOccupancy;
-	float distance, angle, deltaX, deltaY, trueAngle;
+	float distance, angle;
+	float deltaX = 0, deltaY = 0;
 	float pi = atan(1.0) * 4;
 	int numRange = abs((angleMax - angleMin) / angleIncrement);
 	vector<pair<int, int>> pathNodes;
@@ -386,7 +395,6 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 	for (range = 0; range < numRange; range ++) {
 		distance = ranges[range];
 		angle = fmod(angleMin + angleIncrement * range, 2 * pi);
-		trueAngle = angle;
 		emptyRange = false;
 		if (debug) {cout << "angle = " << angle * (180 / pi);}
 
@@ -425,37 +433,6 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 			deltaY = -distance * sin(angle);
 			deltaX = -distance * cos(angle);
 		}
-		/*deltaX = floor(deltaX * 100) / 100;
-		deltaY = floor(deltaY * 100) / 100;*/
-		//rounds based on which quadrant the angle is closer to
-		
-		//if (trueAngle < pi / 4) {
-		//	deltaX = floor(deltaX);
-		//	//deltaY = floor(deltaY);
-		//} 
-		//else if (trueAngle > pi / 4 && trueAngle < pi / 2) {
-		//	//deltaX = floor(deltaX + 0.5);
-		//	deltaY = floor(deltaY + 0.5);
-		//}
-		//else if (trueAngle > pi / 2 && trueAngle < 3 * pi / 4) {
-		//	//deltaX = floor(deltaX + 0.5);
-		//	deltaY = floor(deltaY);
-		//}
-		//else if (trueAngle > 3 * pi / 4 && trueAngle < pi) {			
-		//	deltaX = floor(deltaX);
-		//}
-		//else if (trueAngle > pi && trueAngle < 5 * pi / 4) {			
-		//	deltaX = floor(deltaX + 0.5);
-		//}
-		//else if (trueAngle > 5 * pi / 4 && trueAngle < 3 * pi / 2) {			
-		//	deltaY = floor(deltaY);
-		//}
-		//else if (trueAngle > 3 * pi / 2 && trueAngle < 7 * pi / 4) {			
-		//	deltaY = floor(deltaY + 0.5);
-		//}
-		//else if (trueAngle > 7 * pi / 4 && trueAngle < 2 * pi) {			
-		//	deltaX = floor(deltaX + 0.5);
-		//}
 		deltaX = floor(deltaX + 0.5);
 		deltaY = floor(deltaY + 0.5);
 		
@@ -506,7 +483,7 @@ Environment Robot::discretiseReadings(Environment realEnv, map<pair<float, float
 	Environment newEnv = new Environment(realEnv);
 	map<pair<float, float>, float>::iterator it;
 	float angle, distance, occupancyProbability;
-	float deltaX, deltaY;
+	float deltaX = 0, deltaY = 0;
 	float pi = atan(1.0) * 2;
 	for (it = angleDistanceMap.begin(); it != angleDistanceMap.end(); it++) {
 		angle = it->first.first;
@@ -543,7 +520,7 @@ Environment Robot::discretiseReadings(Environment realEnv, map<pair<float, float
 		}
 		deltaX = floor(deltaX + 0.1);
 		deltaY = floor(deltaY + 0.1);
-		newEnv.addHashedMapping2(this->getXPos() + deltaX, this->getYPos() + deltaY);
+//		newEnv.addHashedMapping2(this->getXPos() + deltaX, this->getYPos() + deltaY);
 		newEnv.setMapping(this->getXPos() + deltaX, this->getYPos() + deltaY, occupancyProbability);
 		this->addSensorHistory(this->getXPos() + deltaX, this->getYPos() + deltaY, occupancyProbability);
 		//cout << "x = " << this->getXPos() + deltaX << "; y = " << this->getYPos() + deltaY << "; probability = " << occupancyProbability << endl;

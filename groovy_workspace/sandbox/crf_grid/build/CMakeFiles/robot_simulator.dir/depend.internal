@@ -4,6 +4,7 @@
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.h
+ /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.cpp
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.h
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.h
@@ -70,4 +71,5 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o
  /opt/ros/groovy/include/ros/wall_timer.h
  /opt/ros/groovy/include/ros/wall_timer_options.h
  /opt/ros/groovy/include/rosconsole/macros_generated.h
+ /opt/ros/groovy/include/sensor_msgs/LaserScan.h
  /opt/ros/groovy/include/std_msgs/Header.h
