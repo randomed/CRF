@@ -7,6 +7,7 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/Robot.cpp
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/Robot.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/robot_simulator.cpp
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/robot_simulator.h
+CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: ../src/rviz_publish.cpp
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/XmlRpcDecl.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/XmlRpcValue.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/geometry_msgs/Point.h

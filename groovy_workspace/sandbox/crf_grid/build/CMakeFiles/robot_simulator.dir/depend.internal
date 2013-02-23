@@ -8,6 +8,7 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.h
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.h
+ /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/rviz_publish.cpp
  /opt/ros/groovy/include/XmlRpcDecl.h
  /opt/ros/groovy/include/XmlRpcValue.h
  /opt/ros/groovy/include/geometry_msgs/Point.h

@@ -4,7 +4,9 @@
 #include "Environment.cpp"
 #include "nav_msgs/Odometry.h"
 #include "sensor_msgs/LaserScan.h"
-
+#include "ros/ros.h"
+#include "rviz_publish.cpp"
+#define ROBOTGRIDVIEWTOPIC "robot_grid_view"
 using namespace std;
 
 class Robot {
@@ -20,7 +22,7 @@ protected:
 	int maxViewDistance;
 	float angleIncrement; //how much to increase the angle by at each reading, in degrees
 	nav_msgs::Odometry odometry;
-	sensor_msgs::LaserScan laserScan;		
+	sensor_msgs::LaserScan laserScan;
 public:
 	Robot() {
 //		float pi = (atan(1.0) * 4);
@@ -39,7 +41,6 @@ public:
 		this->environment = new Environment(*new Environment());
 
 		this->angleIncrement = 3;
-
 	};
 	Robot(int x, int y) {
 		this->Orientation = 90;
@@ -62,7 +63,7 @@ public:
 	void setRobotEnvironment(Environment robotEnv) {this->environment = robotEnv;};
 	Environment *getRobotEnvironment() {return &this->environment;};
 	Environment discretiseReadings(Environment realEnv, map<pair<float, float>, float> angleDistanceMap);//##outdated##
-	Environment discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, float ranges[]);
+	Environment discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, const float ranges[]);
 	//void clearAngleDistanceMap() {this->angleDistanceMap.clear();};
 	int getXPos() {return this->coords.first;};
 	int getYPos() {return this->coords.second;};
@@ -71,4 +72,5 @@ public:
 	map<pair<int, int>, list<float>> getSensorHistory() {return this->sensorHistory;};
 	void addSensorHistory(int x, int y, float occupancyProbability) {this->sensorHistory[make_pair(x, y)].push_back(occupancyProbability);};
 	float normaliseOccupancy(float occupancyProbability);
+	void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg); //extract LaserScan message from topic and discretise the readings
 };

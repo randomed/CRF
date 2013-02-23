@@ -51,6 +51,10 @@ nav_msgs/Odometry.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/nav_msgs/Odometry.h
 sensor_msgs/LaserScan.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/sensor_msgs/LaserScan.h
+ros/ros.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/ros/ros.h
+rviz_publish.cpp
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/rviz_publish.cpp
 
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
 robot_simulator.h
@@ -71,6 +75,14 @@ Robot.cpp
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.cpp
 sensor_msgs/LaserScan.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/sensor_msgs/LaserScan.h
+rviz_publish.cpp
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/rviz_publish.cpp
+
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/rviz_publish.cpp
+string
+-
+nav_msgs/GridCells.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/nav_msgs/GridCells.h
 
 /opt/ros/groovy/include/XmlRpcDecl.h
 ros/macros.h

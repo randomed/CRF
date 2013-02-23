@@ -378,7 +378,7 @@ bool Robot::move(Environment *realEnv, int x, int y) { //move the robot: foward 
 	}
 	return true;
 };
-Environment Robot::discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, float ranges[]) {
+Environment Robot::discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, const float ranges[]) {
 	
 	bool debug = false;
 	int range, nonNormalisedOccupancy;
@@ -471,10 +471,10 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 		nonNormalisedOccupancy = occupancyCounterIterator->second.first - occupancyCounterIterator->second.second;
 		this->environment.setMapping(occupancyCounterIterator->first.first, occupancyCounterIterator->first.second, 
 									normaliseOccupancy(nonNormalisedOccupancy));
+		this->environment.addHashedMapping(occupancyCounterIterator->first.first, occupancyCounterIterator->first.second);
 	}
 	//this->environment.setMapping(1, 0, 2);
 	//this->environment.setMapping(1, 0, 3);
-	//this->environment.addHashedMapping2(1, 0);
 	return this->environment;
 }
 
@@ -528,5 +528,13 @@ Environment Robot::discretiseReadings(Environment realEnv, map<pair<float, float
 
 
 	return newEnv;
+};
+
+void Robot::processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
+	this->discretiseReadings(msg->angle_min, msg->angle_max, msg->angle_increment, msg->range_min, msg->range_max, &msg->ranges[0]);
+
+//	ros::init(argc, argv, "robot_grid_sender");
+	publishEnvironmentTopic(&this->environment, ROBOTGRIDVIEWTOPIC);
+	ROS_INFO("sending..");	
 };
 
