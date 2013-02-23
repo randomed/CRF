@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -O2 -g  -pthread   -shared -Wl,-soname,liblib_robot.so -o ../lib/liblib_robot.so CMakeFiles/lib_robot.dir/src/Robot.cpp.o -L/opt/ros/groovy/lib -lroscpp -lboost_signals-mt -lboost_filesystem-mt -lrosconsole -lxmlrpcpp -lroscpp_serialization -lrostime -lboost_date_time-mt -lboost_system-mt -lboost_thread-mt -lpthread -lcpp_common -Wl,-rpath,/opt/ros/groovy/lib 
