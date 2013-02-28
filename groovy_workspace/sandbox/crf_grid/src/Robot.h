@@ -7,6 +7,7 @@
 #include "ros/ros.h"
 #include "rviz_publish.cpp"
 #define ROBOTGRIDVIEWTOPIC "robot_grid_view"
+#define ROBOTPOSITIONTOPIC "robot_predicted_position"
 using namespace std;
 
 class Robot {

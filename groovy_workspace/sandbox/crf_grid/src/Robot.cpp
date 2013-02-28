@@ -532,9 +532,18 @@ Environment Robot::discretiseReadings(Environment realEnv, map<pair<float, float
 
 void Robot::processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
 	this->discretiseReadings(msg->angle_min, msg->angle_max, msg->angle_increment, msg->range_min, msg->range_max, &msg->ranges[0]);
+	vector<float> test = msg->ranges;
+//	ros::init(argc, argv, "robot_grid_sender");	
+	/*	
+		vector<float>::iterator it;
+		int ind = 0;
+		for (it = test.begin(); it != test.end(); it ++, ind ++) {
 
-//	ros::init(argc, argv, "robot_grid_sender");
+			ROS_INFO("index: %d, distance %f", ind, test[ind]);
+		}
+		*/
 	publishEnvironmentTopic(&this->environment, ROBOTGRIDVIEWTOPIC);
+	publishRobotPositionTopic(&this->environment, ROBOTPOSITIONTOPIC);
 	ROS_INFO("sending..");	
 };
 

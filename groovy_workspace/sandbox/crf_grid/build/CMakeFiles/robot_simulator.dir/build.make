@@ -69,15 +69,15 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/share/
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/share/nav_msgs/package.xml
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/random/CRF/groovy_workspace/sandbox/crf_grid/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -std=c++0x -o CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o -c /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -std=c++0x -lpthread -o CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o -c /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
 
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -std=c++0x -E /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp > CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -std=c++0x -lpthread -E /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp > CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.i
 
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -std=c++0x -S /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp -o CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -std=c++0x -lpthread -S /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp -o CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.s
 
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o.requires:
 .PHONY : CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o.requires

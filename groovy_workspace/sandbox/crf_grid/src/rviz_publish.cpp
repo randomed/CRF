@@ -8,7 +8,7 @@ void publishEnvironmentTopic(Environment *robotEnv, std::string topic);
 /*
 * Utility function to put a marker of ground truth robot position
 */
-void publishRobotGroundTruthTopic(Environment *robotEnv, std::string topic);
+void publishRobotPositionTopic(Environment *robotEnv, std::string topic);
 
 void publishEnvironmentTopic(Environment *robotEnv, std::string topic) {
 	int x, y, messageCount = 0;
@@ -21,7 +21,7 @@ void publishEnvironmentTopic(Environment *robotEnv, std::string topic) {
 
 	gridCellsMessage.cell_width = cell_width;
 	gridCellsMessage.cell_height = cell_height;
-	current_point.z = 0;
+	current_point.z = 1;
 	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(topic, 1000);
 	ros::Rate loop_rate(10);
 
@@ -35,7 +35,7 @@ void publishEnvironmentTopic(Environment *robotEnv, std::string topic) {
 			}
 		}
 	}
-	ROS_INFO("------------------");
+//	ROS_INFO("------------------");
 	gridCellsMessage.header.frame_id = "my_frame";
 	gridCellsMessage.header.stamp = ros::Time::now();
 	gridCellsMessage.cells = points;
@@ -50,7 +50,7 @@ void publishEnvironmentTopic(Environment *robotEnv, std::string topic) {
 };
 
 
-void publishRobotGroundTruthTopic(Environment *robotEnv, std::string topic) { //##rename this
+void publishRobotPositionTopic(Environment *robotEnv, std::string topic) { //##rename this
 	int messageCount = 0;
 	float cell_width = 1;
 	float cell_height = 1;
@@ -60,7 +60,7 @@ void publishRobotGroundTruthTopic(Environment *robotEnv, std::string topic) { //
 	geometry_msgs::Point robot_point;
 	gridCellsMessage.cell_width = cell_width;
 	gridCellsMessage.cell_height = cell_height;
-	robot_point.z = 0;
+	robot_point.z = 1;
 	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(topic, 1000);
 	ros::Rate loop_rate(10);
 

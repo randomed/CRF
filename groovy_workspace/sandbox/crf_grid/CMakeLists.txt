@@ -41,7 +41,7 @@ rosbuild_add_library(robot src/Robot.cpp)
 rosbuild_add_compile_flags(robot -lm -std=c++0x)
 #rosbuild_add_compile_flags(lib_environment )
 rosbuild_add_executable(robot_simulator src/robot_simulator.cpp)
-rosbuild_add_compile_flags(robot_simulator -std=c++0x)
+rosbuild_add_compile_flags(robot_simulator -std=c++0x -lpthread)
 
 rosbuild_add_executable(grid_processor src/grid_processor.cpp)
 rosbuild_add_compile_flags(grid_processor -std=c++0x)

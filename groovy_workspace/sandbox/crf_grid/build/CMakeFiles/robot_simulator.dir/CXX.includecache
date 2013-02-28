@@ -59,6 +59,10 @@ rviz_publish.cpp
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.cpp
 robot_simulator.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.h
+std_msgs/String.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/std_msgs/String.h
+sstream
+-
 
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/robot_simulator.h
 ros/ros.h
@@ -77,6 +81,8 @@ sensor_msgs/LaserScan.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/sensor_msgs/LaserScan.h
 rviz_publish.cpp
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/rviz_publish.cpp
+boost/thread.hpp
+-
 
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/rviz_publish.cpp
 string
@@ -879,6 +885,22 @@ std_msgs/Header.h
 -
 
 /opt/ros/groovy/include/std_msgs/Header.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+
+/opt/ros/groovy/include/std_msgs/String.h
 string
 -
 vector

@@ -47,10 +47,10 @@ void Environment::generateTestMap() {
 	//	}
 	//}	
 
-	//this->setMapping(2, 1, 1);
-	//addHashedMapping(2, 1);
-	//this->setMapping(2, 2, 1);
-	//addHashedMapping(2, 2);
+//	this->setMapping(2, 1, 1);
+//	addHashedMapping(2, 1);
+//	this->setMapping(2, 2, 1);
+//	addHashedMapping(2, 2);
 
 	//this->setMapping(2, 3, 1);
 	//addHashedMapping(2, 3);
@@ -62,7 +62,7 @@ void Environment::generateTestMap() {
 	//addHashedMapping(2, 6);
 	
 	srand(time(NULL));
-
+	
 	//populate randomly
 	int randomx, randomy;
 	y = 0;

@@ -73,4 +73,5 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/includ
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/rosconsole/macros_generated.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/sensor_msgs/LaserScan.h
 CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/std_msgs/Header.h
+CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o: /opt/ros/groovy/include/std_msgs/String.h
 
