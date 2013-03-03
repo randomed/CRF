@@ -4,6 +4,7 @@
 #include "Environment.cpp"
 #include "nav_msgs/Odometry.h"
 #include "sensor_msgs/LaserScan.h"
+#include "geometry_msgs/Twist.h"
 #include "ros/ros.h"
 #include "rviz_publish.cpp"
 #define ROBOTGRIDVIEWTOPIC "robot_grid_view"
@@ -24,6 +25,7 @@ protected:
 	float angleIncrement; //how much to increase the angle by at each reading, in degrees
 	nav_msgs::Odometry odometry;
 	sensor_msgs::LaserScan laserScan;
+	Environment * realEnv; //ground truth of the environment
 public:
 	Robot() {
 //		float pi = (atan(1.0) * 4);
@@ -55,6 +57,7 @@ public:
 
 	//map<pair<float, float>, float> getAngleDistanceMap() {return this->angleDistanceMap;};
 	//void addAngleDistanceMapping(float angle, float distance, float probability) {this->angleDistanceMap[make_pair(angle, distance)] = probability;};
+	void setRealEnv(Environment * env);
 	float getViewAngle() {return this->viewAngle;};
 	int getMaxViewDistance() {return this->maxViewDistance;};
 	float getOrientation() {return this->Orientation;};
@@ -74,4 +77,6 @@ public:
 	void addSensorHistory(int x, int y, float occupancyProbability) {this->sensorHistory[make_pair(x, y)].push_back(occupancyProbability);};
 	float normaliseOccupancy(float occupancyProbability);
 	void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg); //extract LaserScan message from topic and discretise the readings
+	void moveRobot(const geometry_msgs::Twist::ConstPtr& msg); //moves robot based on twist data passed from ROS, publishes odometry topic afterwards
+
 };

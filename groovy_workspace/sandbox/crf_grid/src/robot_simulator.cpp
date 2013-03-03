@@ -1,34 +1,11 @@
 #include "robot_simulator.h"
 #include "std_msgs/String.h"
-#include <sstream>
-void chatterCallback(const std_msgs::String::ConstPtr& msg);
-void publishLaserScanTopic(sensor_msgs::LaserScan laserScan) {//##delete this later
-	int messageCount = 0;
-	nav_msgs::GridCells gridCellsMessage;
-	ros::NodeHandle n;
-	sensor_msgs::LaserScan scanMessage;
-
-	scanMessage = laserScan;
-	scanMessage.header.frame_id = "my_frame";
-	scanMessage.header.stamp = ros::Time::now();
-
-	ros::Publisher chatter_pub = n.advertise<sensor_msgs::LaserScan>(ROBOTLASERSCANTOPIC, 5);
-	ros::Rate loop_rate(10);
-
-	while (ros::ok() && messageCount < 5)  {
-		chatter_pub.publish(scanMessage);
-			
-		ros::spinOnce();
-		loop_rate.sleep();
-		messageCount ++;
-	}
-};
 
 void laserScanThread(Robot * robot, Environment * env) {
 	ros::NodeHandle n;
 	sensor_msgs::LaserScan scanMessage;
 
-	ros::Publisher chatter_pub = n.advertise<sensor_msgs::LaserScan>(ROBOTLASERSCANTOPIC, 1000);
+	ros::Publisher chatter_pub = n.advertise<sensor_msgs::LaserScan>(ROBOTLASERSCANTOPIC, 5);
 	ros::Rate loop_rate(1);
 	
 	while (ros::ok())  {
@@ -37,12 +14,12 @@ void laserScanThread(Robot * robot, Environment * env) {
 //		publishLaserScanTopic(robot->getLaserScan());
 		scanMessage = robot->getLaserScan();
 
-		vector<float>::iterator it;
-		int ind = 0;
-		for (it = scanMessage.ranges.begin(); it != scanMessage.ranges.end(); it ++, ind ++) {
-
-			ROS_INFO("index: %d, distance %f", ind, scanMessage.ranges[ind]);
-		}
+//		vector<float>::iterator it;
+//		int ind = 0;
+//		for (it = scanMessage.ranges.begin(); it != scanMessage.ranges.end(); it ++, ind ++) {
+//
+//			ROS_INFO("index: %d, distance %f", ind, scanMessage.ranges[ind]);
+//		}
 		scanMessage.header.frame_id = "my_frame";
 		scanMessage.header.stamp = ros::Time::now();
 
@@ -65,8 +42,8 @@ void publishEnvironmentThread(Environment * env) {
 	gridCellsMessage.cell_height = cell_height;
 	current_point.z = 0;
 
-	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(GRIDCELLTOPIC, 1000);
-	ros::Rate loop_rate(10);
+	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(GRIDCELLTOPIC, 5);
+	ros::Rate loop_rate(0.1);
 	gridCellsMessage.header.frame_id = "my_frame";
 
 	while (ros::ok())  {
@@ -100,9 +77,10 @@ void publishRobotPosition(Environment *env) {
 	gridCellsMessage.cell_height = cell_height;
 	robot_point.z = 0;
 
-	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(ROBOTGROUNDTRUTHTOPIC, 1000);
-	ros::Rate loop_rate(10);
+	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(ROBOTGROUNDTRUTHTOPIC, 5);
+	ros::Rate loop_rate(0.1);
 	gridCellsMessage.header.frame_id = "my_frame";
+
 
 	while (ros::ok())  {
 		robot_point.x = env->getRobotX();
@@ -121,21 +99,22 @@ void publishRobotPosition(Environment *env) {
 
 };
 
-void chatterCallback(const std_msgs::String::ConstPtr& msg)
-{
-//ROS_INFO("here2");
-	ROS_INFO("I heard: [%s]", msg->data.c_str());
-}
+void odometryThread(Robot * robot, Environment * env) {
+	ros::NodeHandle n;
+	ros::Subscriber sub = n.subscribe(ROBOTTWISTTOPIC, 5, &Robot::moveRobot, robot);
+	ros::spin();
+};
 
 int main(int argc, char **argv)
 {
-
 	Environment *env = new Environment();
 	Robot *robot = new Robot();
+	robot->setRealEnv(env);
 	ros::init(argc, argv, "simulation_sender");
 	boost::thread t_laserScan(laserScanThread, robot, env);
 	boost::thread t_groundTruth(publishEnvironmentThread, env);
 	boost::thread t_robotPosition(publishRobotPosition, env);
+	boost::thread t_odometry(odometryThread, robot, env);
 	Environment robotEnv;
 	
 //	publishEnvironmentTopic(env, GRIDCELLTOPIC);
@@ -144,7 +123,8 @@ int main(int argc, char **argv)
 
 	t_laserScan.join();
 	t_groundTruth.join();
-	t_robotPosition.join();	
+	t_robotPosition.join();
+	t_odometry.join();
 	return 0;
 };
 

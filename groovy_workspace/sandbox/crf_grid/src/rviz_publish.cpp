@@ -22,7 +22,7 @@ void publishEnvironmentTopic(Environment *robotEnv, std::string topic) {
 	gridCellsMessage.cell_width = cell_width;
 	gridCellsMessage.cell_height = cell_height;
 	current_point.z = 1;
-	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(topic, 1000);
+	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(topic, 5);
 	ros::Rate loop_rate(10);
 
 	for (y = 0; y < robotEnv->getGridSizeVertical(); y++) {
@@ -31,7 +31,7 @@ void publishEnvironmentTopic(Environment *robotEnv, std::string topic) {
 				current_point.x = x;
 				current_point.y = y;
 				points.push_back(current_point);
-				ROS_INFO("x = %d, y = %d", x, y);
+//				ROS_INFO("x = %d, y = %d", x, y);
 			}
 		}
 	}

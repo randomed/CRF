@@ -4,7 +4,6 @@
 #include "Robot.h"
 
 using namespace std;
-
 float getAngle(int x1, int y1, int x2, int y2);
 float getDistance(int x1, int y1, int x2, int y2);
 float convertNegativeAngles(float angle);
@@ -85,6 +84,9 @@ float convertNegativeAngles(float angle) {
 	return angle;
 };
 
+void Robot::setRealEnv(Environment * env) {
+	this->realEnv = env;
+};
 
 Environment Robot::triggerSensors(Environment *realEnv) { //returns this particular instance of what sensors see
 	float pi = atan(1.0) * 4;
@@ -270,70 +272,6 @@ vector<pair<int, int>> Robot::rayCast(int x, int y) {
 	}
 	return nodePath;
 };
-
-/*float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
-
-	int currentx = x; 
-	int currenty = y;
-	int dx = abs(this->getXPos() - currentx);
-	int dy = abs(this->getYPos() - currenty);
-	int sx, sy, error, temperror;
-	int threshold = 0;
-	if (this->getXPos() > currentx) {
-		sx = 1;
-	}
-	else {
-		sx = -1;
-	}
-	
-	if (this->getYPos() > currenty) {
-		sy = 1;
-	}
-	else {
-		sy = -1;
-	}
-	error = dx - dy;
-
-	while (currentx != this->getXPos() || currenty != this->getYPos()) {		
-		
-		temperror = error * 2;
-		if (temperror > -dy) {
-			error -= dy;
-			currentx += sx;
-			if	(threshold < 1 &&
-				!(temperror < dx) &&
-				realEnv.checkHashedMapping(currentx, currenty)
-				) {
-					error += dx; 
-					currenty += sy;
-					threshold++;
-			}
-
-		}
-		if (temperror < dx) {
-			error += dx;
-			currenty += sy;
-			if	(threshold < 1 &&
-				!(temperror > -dy) &&
-				realEnv.checkHashedMapping(currentx, currenty)
-				) {
-					error -= dy;
-					currentx += sx;
-					threshold++;
-			}
-
-		}
-				
-		if (realEnv.checkHashedMapping(currentx, currenty)) {
-			//cout << "current x = " << currentx << "; current y = " << currenty << endl;
-			return getDistance(currentx, currenty, this->getXPos(), this->getYPos());
-		}
-
-		threshold = 0;
-	}
-
-	return -1;
-};*/
 
 float Robot::factorNoise(float occupancyProbability) {
 	if (occupancyProbability == 0) {
@@ -545,5 +483,11 @@ void Robot::processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
 	publishEnvironmentTopic(&this->environment, ROBOTGRIDVIEWTOPIC);
 	publishRobotPositionTopic(&this->environment, ROBOTPOSITIONTOPIC);
 	ROS_INFO("sending..");	
+};
+
+void Robot::moveRobot(const geometry_msgs::Twist::ConstPtr& msg) {
+	ROS_INFO("here");
+
+	//move and then send odometry topic
 };
 
