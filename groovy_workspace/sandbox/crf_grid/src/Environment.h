@@ -15,6 +15,7 @@ protected:
 	unordered_set<string> hashedMapping; //for fast lookup during sensor operations
 //	unordered_set<string> hashedMapping2; //for fast lookup during newly detect cells
 	float calculateNewCertainty(list<float> cellHistory, float newOccupancy);
+	float occupancyValueThreshold;
 public:
 	Environment();	
 	Environment(Environment *env); 
@@ -41,6 +42,7 @@ public:
 	float getMapping(int x, int y) {
 		return this->mapping[make_pair(x, y)];
 	};
+	float getOccupancyValueThreshold();
 	bool checkHashedMapping(int x, int y) { //checks if space is occupied, prevents algorithm from extending beyond borders
 		if (x < 0 || y < 0 || x > this->gridSizeHorizontal - 1 || y > this->gridSizeVertical - 1) {
 			return true;
@@ -64,6 +66,8 @@ public:
 	int getRobotX() { return this->robotCoords.first;};
 	int getRobotY() { return this->robotCoords.second;};
 	void clearHashedMapping() {this->hashedMapping.clear();};
+	void setMap(map<pair<int, int>, float> newMap);
+	map<pair<int, int>, float> getMap();
 //	void clearHashedMapping2() {this->hashedMapping2.clear();};
 };
 

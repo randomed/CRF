@@ -8,6 +8,11 @@ CMakeFiles/grid_processor.dir/src/grid_processor.cpp.o
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.h
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/grid_processor.cpp
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/grid_processor.h
+ /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/node.cpp
+ /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/node.h
+ /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/occupancy_grid.cpp
+ /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/occupancy_grid.h
+ /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/ros_callback_container.cpp
  /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/rviz_publish.cpp
  /opt/ros/groovy/include/XmlRpcDecl.h
  /opt/ros/groovy/include/XmlRpcValue.h

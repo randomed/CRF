@@ -1,3 +1,5 @@
+#ifndef ENVIRONMENT_H
+#define ENVIRONMENT_H
 #include <algorithm>
 #include <time.h>
 #include "Environment.h"
@@ -13,6 +15,7 @@ Environment::Environment() {
 	this->gridSizeVertical = 10;
 	this->robotCoords = make_pair(0, 0);	
 	this->generateTestMap();
+	this->occupancyValueThreshold = 0.2;
 };
 
 Environment::Environment(Environment *env) {
@@ -20,8 +23,20 @@ Environment::Environment(Environment *env) {
 	this->gridSizeVertical = env->gridSizeVertical;
 	this->robotCoords = env->robotCoords;
 	this->generateUnknownMap();
+	this->occupancyValueThreshold = 0.2;
 };
 
+void Environment::setMap(map<pair<int, int>, float> newMap) {
+	this->mapping = newMap;	
+};
+
+float Environment::getOccupancyValueThreshold() {
+	return this->occupancyValueThreshold;
+};
+
+map<pair<int, int>, float> Environment::getMap() {
+	return this->mapping;
+};
 void Environment::generateTestMap() {
 	int x, y;
 	stringstream ss;
@@ -110,7 +125,7 @@ void Environment::printMap() {
 				cout << "R" << "\t";
 			}
 			else {
-				cout << this->getMapping(x, y) << "\t";
+				cout << floor(this->getMapping(x, y) * 100) / 100 << "\t";
 			}
 		}
 		cout << endl << endl;
@@ -142,3 +157,5 @@ float Environment::calculateNewCertainty(list<float> cellHistory, float newOccup
 	}
 
 };
+
+#endif
