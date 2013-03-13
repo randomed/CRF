@@ -67,6 +67,9 @@ CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/xmlrpcpp
 CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/roscpp/package.xml
 CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/geometry_msgs/package.xml
 CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/nav_msgs/package.xml
+CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/message_filters/package.xml
+CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/sensor_msgs/package.xml
+CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/tf/package.xml
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/random/CRF/groovy_workspace/sandbox/crf_grid/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/environment.dir/src/Environment.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -o CMakeFiles/environment.dir/src/Environment.cpp.o -c /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp

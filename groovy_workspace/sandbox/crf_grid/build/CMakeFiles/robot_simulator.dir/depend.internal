@@ -12,13 +12,25 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o
  /opt/ros/groovy/include/XmlRpcDecl.h
  /opt/ros/groovy/include/XmlRpcValue.h
  /opt/ros/groovy/include/geometry_msgs/Point.h
+ /opt/ros/groovy/include/geometry_msgs/PointStamped.h
  /opt/ros/groovy/include/geometry_msgs/Pose.h
+ /opt/ros/groovy/include/geometry_msgs/PoseStamped.h
  /opt/ros/groovy/include/geometry_msgs/PoseWithCovariance.h
  /opt/ros/groovy/include/geometry_msgs/Quaternion.h
+ /opt/ros/groovy/include/geometry_msgs/QuaternionStamped.h
+ /opt/ros/groovy/include/geometry_msgs/Transform.h
+ /opt/ros/groovy/include/geometry_msgs/TransformStamped.h
  /opt/ros/groovy/include/geometry_msgs/Twist.h
+ /opt/ros/groovy/include/geometry_msgs/TwistStamped.h
  /opt/ros/groovy/include/geometry_msgs/TwistWithCovariance.h
  /opt/ros/groovy/include/geometry_msgs/Vector3.h
+ /opt/ros/groovy/include/geometry_msgs/Vector3Stamped.h
+ /opt/ros/groovy/include/nav_msgs/GetMap.h
+ /opt/ros/groovy/include/nav_msgs/GetMapRequest.h
+ /opt/ros/groovy/include/nav_msgs/GetMapResponse.h
  /opt/ros/groovy/include/nav_msgs/GridCells.h
+ /opt/ros/groovy/include/nav_msgs/MapMetaData.h
+ /opt/ros/groovy/include/nav_msgs/OccupancyGrid.h
  /opt/ros/groovy/include/nav_msgs/Odometry.h
  /opt/ros/groovy/include/ros/advertise_options.h
  /opt/ros/groovy/include/ros/advertise_service_options.h
@@ -75,3 +87,16 @@ CMakeFiles/robot_simulator.dir/src/robot_simulator.cpp.o
  /opt/ros/groovy/include/sensor_msgs/LaserScan.h
  /opt/ros/groovy/include/std_msgs/Header.h
  /opt/ros/groovy/include/std_msgs/String.h
+ /opt/ros/groovy/include/tf/LinearMath/Matrix3x3.h
+ /opt/ros/groovy/include/tf/LinearMath/MinMax.h
+ /opt/ros/groovy/include/tf/LinearMath/QuadWord.h
+ /opt/ros/groovy/include/tf/LinearMath/Quaternion.h
+ /opt/ros/groovy/include/tf/LinearMath/Scalar.h
+ /opt/ros/groovy/include/tf/LinearMath/Transform.h
+ /opt/ros/groovy/include/tf/LinearMath/Vector3.h
+ /opt/ros/groovy/include/tf/exceptions.h
+ /opt/ros/groovy/include/tf/tf.h
+ /opt/ros/groovy/include/tf/tfMessage.h
+ /opt/ros/groovy/include/tf/time_cache.h
+ /opt/ros/groovy/include/tf/transform_broadcaster.h
+ /opt/ros/groovy/include/tf/transform_datatypes.h
