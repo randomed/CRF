@@ -8,6 +8,12 @@ occupancy_grid::occupancy_grid() {
 	this->constructGrid();
 	this->iterationCount = 1;
 	this->externalEnvironment = new Environment();
+
+	this->linkPotentials.push_back(2); //potential for occupied
+	this->linkPotentials.push_back(2); //potential for non occupied
+
+	this->hiddenPotentials.push_back(0.5); //potential for occupied
+	this->hiddenPotentials.push_back(0.5); //potential for non occupied
 };
 
 occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
@@ -18,12 +24,18 @@ occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
 	this->gridSize = gridSize;	
 
 	this->dimensions = 2;	
-	this->constructGrid();
+//	this->constructGrid();
 	this->iterationCount = iterationCount;
 	this->externalEnvironment = environment;
 
 
 	this->processedEnvironment = new Environment(environment);
+
+	this->linkPotentials.push_back(10);
+	this->linkPotentials.push_back(10);
+
+	this->hiddenPotentials.push_back(0.5); //potential for occupied
+	this->hiddenPotentials.push_back(0.5); //potential for non occupied
 };
 
 occupancy_grid::occupancy_grid(int dimensions, vector<int> gridSize, int iterationCount) {
@@ -32,6 +44,27 @@ occupancy_grid::occupancy_grid(int dimensions, vector<int> gridSize, int iterati
 	this->constructGrid();
 	this->iterationCount = iterationCount;
 	this->externalEnvironment = new Environment();
+};
+
+vector<vector<int>> occupancy_grid::getNeighbours(vector<int> currentCoords) {
+	unsigned int currentCoord = 0;
+//	vector<int>::iterator coordsIt;
+	vector<vector<int>> neighbours;
+	vector<int> currentNeighbour;
+//	for (coordsIt = currentCoords.begin(); coordsIt != currentCoords.end(); coordsIt ++) {
+	for (currentCoord = 0; currentCoord < currentCoords.size(); currentCoord ++) {
+		if (currentCoords[currentCoord] > 0) {
+			currentNeighbour = currentCoords;
+			currentNeighbour[currentCoord] -= 1;
+			neighbours.push_back(currentNeighbour);	
+		}
+		if (currentCoords[currentCoord] < this->gridSize[currentCoord] - 1) {
+			currentNeighbour = currentCoords;
+			currentNeighbour[currentCoord] += 1;
+			neighbours.push_back(currentNeighbour);	
+		}
+	}
+	return neighbours;
 };
 
 node * occupancy_grid::getNode(int x, int y) { //gets node in a 2d grid
@@ -126,18 +159,24 @@ void occupancy_grid::__constructGrid(node * currentNode) {
 */
 void occupancy_grid::loopyBeliefPropagation() {
 	int iteration;
-	float factorNodeMessage, currentNodeValue;	
-	node * currentNode;
-	vector<node *> processed;
-	queue<node *> unprocessed;
-	vector<node *>::iterator currentNeighbour, processedIt;
-	
+	float factorNodeMessage;//, currentNodeValue;	
+//	node * currentNode;
+//	vector<node *> processed;
+//	queue<node *> unprocessed;
+//	vector<node *>::iterator currentNeighbour, processedIt;
+
+	vector<int> currentNode;
+	vector<vector<int>> processed;
+	queue<vector<int>> unprocessed;
+	vector<vector<int>> neighbours;
+	vector<vector<int>>::iterator currentNeighbour, processedIt;
+	ROS_INFO("starting LBP...");	
 
 	this->processedEnvironment->setMap(this->externalEnvironment->getMap());
 
 	//set node (0, 0) as root
-	unprocessed.push(grid[vector<int>(2, 0)]);
-	processed.push_back(grid[vector<int>(2, 0)]);
+	unprocessed.push(vector<int>(2, 0));
+	processed.push_back(vector<int>(2, 0));
 
 	for (iteration = 0; iteration < this->iterationCount; iteration ++) {
 
@@ -152,25 +191,27 @@ void occupancy_grid::loopyBeliefPropagation() {
 
 			//incoming messages are the sum-product of the neighbouring nodes
 			factorNodeMessage = this->calculateIncomingMessages(currentNode);
-
+			
+			/*
 			if (DEBUG) {
 				cout << "current node : ";	
 				cout << currentNode->getCoordinates()[0] << ", " << currentNode->getCoordinates()[1] << " - "; 
 				cout << " value : " << factorNodeMessage;
 				cout << endl;
 			}
-
+			*/
 			//currentNode->setValue(factorNodeMessage);
-			currentNodeValue = this->processedEnvironment->getMapping(currentNode->getCoordinates()[0], currentNode->getCoordinates()[1]);
-			if (!(currentNodeValue > 0.5 + this->processedEnvironment->getOccupancyValueThreshold() 
-				|| currentNodeValue < 0.5 - this->processedEnvironment->getOccupancyValueThreshold())
-				) {
-				this->processedEnvironment->setMapping(currentNode->getCoordinates()[0], currentNode->getCoordinates()[1], factorNodeMessage);
-			}
+//			currentNodeValue = this->processedEnvironment->getMapping(currentNode[0], currentNode[1]);
+//			if (!(currentNodeValue > 0.5 + this->processedEnvironment->getOccupancyValueThreshold() 
+//				|| currentNodeValue < 0.5 - this->processedEnvironment->getOccupancyValueThreshold())
+//				) {
+			this->processedEnvironment->setMapping(currentNode[0], currentNode[1], factorNodeMessage);
+//			}
 			//currentNode->setTempValue(factorNodeMessage);
 
 			//add neighbour nodes to be processed
-			for (currentNeighbour = currentNode->getNeighbours()->begin(); currentNeighbour != currentNode->getNeighbours()->end(); currentNeighbour ++) { //loop through all neighbours
+			neighbours = this->getNeighbours(currentNode);
+			for (currentNeighbour = neighbours.begin(); currentNeighbour != neighbours.end(); currentNeighbour ++) { //loop through all neighbours
 				processedIt = find(processed.begin(), processed.end(), * currentNeighbour);
 				if (processedIt == processed.end()) {
 					unprocessed.push(* currentNeighbour);
@@ -188,8 +229,31 @@ void occupancy_grid::loopyBeliefPropagation() {
 		//	updater->second->pushTempValue();
 		//}
 //		cout << "-----------" << endl;
-//		this->processedEnvironment->printMap();
+		this->processedEnvironment->printMap();
 	}
+};
+
+float occupancy_grid::calculateIncomingMessages(vector<int> currentNode) {
+	vector<vector<int>>::iterator currentNeighbour;
+	vector<vector<int>> neighbours;
+	float nodeValue = this->processedEnvironment->getMapping(currentNode[0], currentNode[1]);
+	float observedNodeValue = this->externalEnvironment->getMapping(currentNode[0], currentNode[1]);
+	float incomingMessage = 0;
+	float occupiedSum = nodeValue, nonOccupiedSum = (1 - nodeValue);
+
+	neighbours = this->getNeighbours(currentNode);
+	for (currentNeighbour = neighbours.begin(); currentNeighbour != neighbours.end(); currentNeighbour ++) { //loop through all neighbours
+		//product sum incoming messages
+
+		incomingMessage = this->processedEnvironment->getMapping((* currentNeighbour)[0], (* currentNeighbour)[1]);
+		occupiedSum += this->hiddenPotentials[0] * incomingMessage;
+		nonOccupiedSum += this->hiddenPotentials[1] * (1 - incomingMessage);
+	}	
+	
+	occupiedSum += observedNodeValue * this->linkPotentials[0];
+	nonOccupiedSum += (1 - observedNodeValue) * this->linkPotentials[1];
+
+	return (1 / (occupiedSum + nonOccupiedSum)) * occupiedSum;
 };
 
 float occupancy_grid::calculateIncomingMessages(node * currentNode) {

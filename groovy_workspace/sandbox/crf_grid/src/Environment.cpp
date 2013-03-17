@@ -15,7 +15,7 @@ Environment::Environment() {
 	this->gridSizeVertical = 10;
 	this->robotCoords = make_pair(0, 0);	
 	this->generateTestMap();
-	this->occupancyValueThreshold = 0.2;
+	this->occupancyValueThreshold = 0.3;
 };
 
 Environment::Environment(Environment *env) {
@@ -23,7 +23,20 @@ Environment::Environment(Environment *env) {
 	this->gridSizeVertical = env->gridSizeVertical;
 	this->robotCoords = env->robotCoords;
 	this->generateUnknownMap();
-	this->occupancyValueThreshold = 0.2;
+	this->occupancyValueThreshold = 0.3;
+};
+
+Environment::Environment(bool unknownMap) {
+	this->gridSizeHorizontal = 10;
+	this->gridSizeVertical = 10;
+	this->robotCoords = make_pair(0, 0);	
+	this->occupancyValueThreshold = 0.3;
+	if (unknownMap) {
+		this->generateUnknownMap();
+	}
+	else {
+		this->generateTestMap();
+	}
 };
 
 void Environment::setMap(map<pair<int, int>, float> newMap) {
@@ -67,10 +80,10 @@ void Environment::generateTestMap() {
 //	this->setMapping(2, 2, 1);
 //	addHashedMapping(2, 2);
 
-	//this->setMapping(2, 3, 1);
-	//addHashedMapping(2, 3);
-	//this->setMapping(2, 4, 1);
-	//addHashedMapping(2, 4);
+	this->setMapping(2, 3, 1);
+	addHashedMapping(2, 3);
+	this->setMapping(2, 4, 1);
+	addHashedMapping(2, 4);
 	//this->setMapping(2, 5, 1);
 	//addHashedMapping(2, 5);
 	//this->setMapping(2, 6, 1);
@@ -79,6 +92,7 @@ void Environment::generateTestMap() {
 	srand(time(NULL));
 	
 	//populate randomly
+	/*
 	int randomx, randomy;
 	y = 0;
 	x = 0;
@@ -96,6 +110,7 @@ void Environment::generateTestMap() {
 			}
 		}
 	}	
+	*/
 };
 
 void Environment::generateUnknownMap() {

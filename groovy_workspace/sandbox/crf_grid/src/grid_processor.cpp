@@ -1,9 +1,15 @@
 #include "grid_processor.h"
-
+#include <ros/callback_queue.h>
 int receiveLaserScanThread(callbackContainer * container) {
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe(ROBOTLASERSCANTOPIC, 5, &callbackContainer::processLaserScan, container);
-	ros::spin();
+//	ros::CallbackQueue q;
+		ros::Subscriber sub = n.subscribe(ROBOTLASERSCANTOPIC, 2, &callbackContainer::processLaserScan, container);
+	while (ros::ok()) {
+//		ROS_INFO("here");
+		ros::getGlobalCallbackQueue()->callOne(ros::WallDuration(1));
+	}
+//	q.callOne();
+//	ros::spin();
 	return 0;
 };
 

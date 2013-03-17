@@ -10,13 +10,14 @@
 
 class occupancy_grid {
 protected:
-	int	dimensions; //default dimension is 2;
+	int dimensions; //default dimension is 2;
 	vector<int> gridSize; //grid size, indexed by dimensions
 	map<vector<int>, node*> grid; //contains the grid, vectors of the coodinates mapping to the node
 	int iterationCount; //number of iterations for loopy belief propagation
 	Environment * externalEnvironment; //environment passed in to be processed
 	Environment * processedEnvironment; //copy of the original environment which has been processed
-
+	vector<float> linkPotentials; //potentials between grid and observations
+	vector<float> hiddenPotentials; //potentials between nodes on the grid
 public:
 	occupancy_grid();
 	occupancy_grid(int dimensions, vector<int> gridSize, int iterationCount);
@@ -32,4 +33,6 @@ public:
 private:
 	void __constructGrid(node * currentNode); //recusive function to iterate through all coordinates
 	float calculateIncomingMessages(node * currentNode); //calculates the product of all incoming messages from all function node to variable node
+	vector<vector<int>> getNeighbours(vector<int> currentCoords); //get coordinates of the neighbours of given node
+	float calculateIncomingMessages(vector<int> currentNode); //calculates the product of all incoming messages from all function node to variable node
 };

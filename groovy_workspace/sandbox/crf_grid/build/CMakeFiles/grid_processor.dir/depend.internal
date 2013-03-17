@@ -29,6 +29,8 @@ CMakeFiles/grid_processor.dir/src/grid_processor.cpp.o
  /opt/ros/groovy/include/ros/advertise_service_options.h
  /opt/ros/groovy/include/ros/assert.h
  /opt/ros/groovy/include/ros/builtin_message_traits.h
+ /opt/ros/groovy/include/ros/callback_queue.h
+ /opt/ros/groovy/include/ros/callback_queue_interface.h
  /opt/ros/groovy/include/ros/common.h
  /opt/ros/groovy/include/ros/console.h
  /opt/ros/groovy/include/ros/duration.h

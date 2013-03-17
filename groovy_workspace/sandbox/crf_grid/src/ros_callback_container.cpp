@@ -17,12 +17,14 @@ public:
 		this->gridOperations = gridOperations;
 	};
 	void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
+		ROS_INFO("starting processing");
 		this->robot->processLaserScan(msg);
 		cout << "unprocessed:"<< endl;
 		this->robot->getRobotEnvironment()->printMap();
-		this->gridOperations->setIterationCount(10);
+		this->gridOperations->setIterationCount(5);
 		this->gridOperations->loopyBeliefPropagation();
-		cout << "processed:"<< endl;
-		this->gridOperations->getProcessedEnvironment()->printMap();
+
+		ROS_INFO("finishing processing");
+//		this->gridOperations->getProcessedEnvironment()->printMap();
 	};
 };

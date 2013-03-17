@@ -16,7 +16,7 @@ protected:
 	float Orientation; //orientation of the robot and its x and y coordinates on the mapping
 	pair<int, int> coords;
 	Environment environment; //The robot's view of the environment
-	float rayCast(Environment realEnv, int x, int y); //performs ray tracing from the point of the robot to the x, y paramters. Returns the distance at which a occupied point is discovered, -1 if no occupied detected
+	float rayCast(Environment * realEnv, int x, int y); //performs ray tracing from the point of the robot to the x, y paramters. Returns the distance at which a occupied point is discovered, -1 if no occupied detected
 	vector<pair<int, int>> rayCast(int x, int y); //gets all nodes in the path from the robot to (x, y)
 	//map<pair<float, float>, float> angleDistanceMap; //maps sensor readings of angle and distances to what the sensor detected
 	map<pair<int, int>, list<float>> sensorHistory; 
@@ -27,7 +27,7 @@ protected:
 	sensor_msgs::LaserScan laserScan;
 	Environment * realEnv; //ground truth of the environment
 public:
-	Robot() {
+	Robot(): environment(true) {
 //		float pi = (atan(1.0) * 4);
 
 		this->Orientation = 180;
@@ -41,7 +41,8 @@ public:
 
 		maxViewDistance = 5;
 
-		this->environment = new Environment(*new Environment());
+//		this->environment = new Environment(*new Environment());
+//		this->environment = new Environment(true);
 
 		this->angleIncrement = 3;
 	};
@@ -51,7 +52,7 @@ public:
 		this->coords = make_pair(x, y);
 		this->viewAngle = 180;
 		this->viewAngle *= (atan(1.0) * 4) / 180;
-		maxViewDistance = 5;
+		maxViewDistance = 10;
 		this->angleIncrement = 3;
 	};
 

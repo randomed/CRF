@@ -5,13 +5,13 @@ void laserScanThread(Robot * robot, Environment * env) {
 	ros::NodeHandle n;
 	sensor_msgs::LaserScan scanMessage;
 
-	ros::Publisher chatter_pub = n.advertise<sensor_msgs::LaserScan>(ROBOTLASERSCANTOPIC, 5);
-	ros::Publisher amcl_pub = n.advertise<sensor_msgs::LaserScan>("scan", 5);
-	ros::Rate loop_rate(1);
-	int a = 0;
+	ros::Publisher chatter_pub = n.advertise<sensor_msgs::LaserScan>(ROBOTLASERSCANTOPIC, 2);
+//	ros::Publisher amcl_pub = n.advertise<sensor_msgs::LaserScan>("scan", 5);
+	ros::Rate loop_rate(0.5);
 	while (ros::ok())  {
 		ROS_INFO("scanning..");
 		robot->triggerSensors(env);
+//		ROS_INFO("finished scan");
 //		publishLaserScanTopic(robot->getLaserScan());
 		scanMessage = robot->getLaserScan();
 //		vector<float>::iterator it;
@@ -20,11 +20,11 @@ void laserScanThread(Robot * robot, Environment * env) {
 //
 //			ROS_INFO("index: %d, distance %f", ind, scanMessage.ranges[ind]);
 //		}
-		scanMessage.header.frame_id = "my_frame";
+		scanMessage.header.frame_id = "laser_frame";
 		scanMessage.header.stamp = ros::Time::now();
 
 		chatter_pub.publish(scanMessage);
-		amcl_pub.publish(scanMessage);	
+		//amcl_pub.publish(scanMessage);	
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
@@ -56,6 +56,7 @@ void publishEnvironmentThread(Environment * env) {
 				}
 			}
 		}
+//		ROS_INFO("sending ground truth environment..");
 		gridCellsMessage.header.stamp = ros::Time::now();
 		gridCellsMessage.cells = points;
 
@@ -142,8 +143,8 @@ void odometryThread(Robot * robot, Environment * env) {
     //first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
-    odom_trans.header.frame_id = "odom";
-    odom_trans.child_frame_id = "base_link";
+    odom_trans.header.frame_id = "base_link";
+    odom_trans.child_frame_id = "odom";
 
     odom_trans.transform.translation.x = x;
     odom_trans.transform.translation.y = y;
@@ -156,7 +157,7 @@ void odometryThread(Robot * robot, Environment * env) {
     //next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
     odom.header.stamp = current_time;
-    odom.header.frame_id = "odom";
+    odom.header.frame_id = "base_link";
 
     //set the position
     odom.pose.pose.position.x = x;
@@ -165,7 +166,7 @@ void odometryThread(Robot * robot, Environment * env) {
     odom.pose.pose.orientation = odom_quat;
 
     //set the velocity
-    odom.child_frame_id = "base_link";
+    odom.child_frame_id = "odom";
     odom.twist.twist.linear.x = vx;
     odom.twist.twist.linear.y = vy;
     odom.twist.twist.angular.z = vth;
@@ -181,21 +182,28 @@ void odometryThread(Robot * robot, Environment * env) {
 void rmcl_getMap() {//move this to grid_processor later
 	
 	ros::NodeHandle n;
-	ros::ServiceClient map_service_client_ = n.serviceClient<nav_msgs::GetMap>("static_map");
+	ros::ServiceClient map_service_client_ = n.serviceClient<nav_msgs::GetMap>("dynamic_map");
 	nav_msgs::GetMap srv_map;
 	vector<signed char>::iterator mapIt;
 	if (map_service_client_.call(srv_map)) {
 		  ROS_INFO("Map service called successfully");
 		nav_msgs::OccupancyGrid map (srv_map.response.map);
-		int i;
-		double convertedChar = 0;
+		int i = 0;
 		vector<signed char>::iterator mapIt = map.data.begin();
-		for (i = 0; i < 200; i++) {
+		for (mapIt = map.data.begin(); mapIt != map.data.end(); mapIt ++) {
+			i++;
+//		for (i = 0; i < 10000; i++) {
 
 //			convertedChar = atof((char ) map.data[i]);
 //			cout << *mapIt;
-			
-			printf("%f ", (float) map.data[i]);
+//			if ((float) map.data[i] > -1) {	
+//				printf("%f ", (float) map.data[i]);
+//			}
+			if ((float) *mapIt > 0) {
+				cout << i % 4000 << ", " << floor(i / 4000) << " = " << (float) *mapIt << endl;	
+//				printf("%f\n", (float) *mapIt);
+			}
+
 		}
 	}
 	else
@@ -216,7 +224,7 @@ int main(int argc, char **argv)
 	boost::thread t_robotPosition(publishRobotPosition, env);
 	boost::thread t_odometry(odometryThread, robot, env);
 //	boost::thread t_rmclMap(rmcl_getMap);
-	Environment robotEnv;
+//	Environment robotEnv;
 	
 //	publishEnvironmentTopic(env, GRIDCELLTOPIC);
 //	publishRobotPositionTopic(env, ROBOTGROUNDTRUTHTOPIC);

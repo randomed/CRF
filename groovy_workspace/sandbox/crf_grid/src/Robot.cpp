@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ROBOT_H
+#define ROBOT_H
 #include <math.h>
 #include <sstream>
 #include <algorithm>
@@ -99,7 +100,6 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 	vector<float> sortedDistances;
 	vector<pair<float, float>>::iterator distanceIt;
 	float* ranges;
-	Environment tempEnv;
 
 	angleUpperbound = convertNegativeAngles(fmod(this->getOrientation() + this->getViewAngle() / 2, (pi * 2)));
 	if (angleUpperbound == 0) {
@@ -120,7 +120,7 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 		roundedY = this->getYPos() + floor(y + 0.5);
 
 		convertedAngle = convertNegativeAngles((pi - (currentAngle + pi / 2))); //converts the angle to be viewed from 1st quadrant increasing clockwise
-		distance = rayCast(*realEnv, roundedX, roundedY);
+		distance = rayCast(realEnv, roundedX, roundedY);
 		//check if angle is in range
 		if (	(	
 					angleUpperbound <= angleLowerbound
@@ -163,7 +163,7 @@ Environment Robot::triggerSensors(Environment *realEnv) { //returns this particu
 	
 	return this->environment;
 };
-float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham's line algorithm
+float Robot::rayCast(Environment * realEnv, int x, int y) { //implements Bresenham's line algorithm
 
 	int currentx = this->getXPos(); 
 	int currenty = this->getYPos();
@@ -220,7 +220,7 @@ float Robot::rayCast(Environment realEnv, int x, int y) { //implements Bresenham
 
 		}
 				
-		if (realEnv.checkHashedMapping(currentx, currenty)) {
+		if (realEnv->checkHashedMapping(currentx, currenty)) {
 			//cout << "current x = " << currentx << "; current y = " << currenty << endl;
 			return getDistance(currentx, currenty, this->getXPos(), this->getYPos());
 		}
@@ -405,7 +405,7 @@ Environment Robot::discretiseReadings(float angleMin, float angleMax, float angl
 		
 		//pathNodes = rayCast(2, 0);
 	}
-	this->environment.generateUnknownMap();
+//	this->environment.generateUnknownMap();
 	for (occupancyCounterIterator = occupancyCounter.begin(); occupancyCounterIterator != occupancyCounter.end(); occupancyCounterIterator ++) { //put occupancy values into mapping
 		nonNormalisedOccupancy = occupancyCounterIterator->second.first - occupancyCounterIterator->second.second;
 		this->environment.setMapping(occupancyCounterIterator->first.first, occupancyCounterIterator->first.second, 
@@ -491,4 +491,4 @@ void Robot::moveRobot(const geometry_msgs::Twist::ConstPtr& msg) {
 
 	//move and then send odometry topic
 };
-
+#endif

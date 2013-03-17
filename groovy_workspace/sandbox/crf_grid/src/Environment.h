@@ -19,6 +19,7 @@ protected:
 public:
 	Environment();	
 	Environment(Environment *env); 
+	Environment(bool unknownMap);
 	void generateTestMap();
 	void generateUnknownMap();
 	void printMap();
