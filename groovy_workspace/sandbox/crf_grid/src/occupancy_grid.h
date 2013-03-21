@@ -35,4 +35,11 @@ private:
 	float calculateIncomingMessages(node * currentNode); //calculates the product of all incoming messages from all function node to variable node
 	vector<vector<int>> getNeighbours(vector<int> currentCoords); //get coordinates of the neighbours of given node
 	float calculateIncomingMessages(vector<int> currentNode); //calculates the product of all incoming messages from all function node to variable node
+	float ** __processedMessages1; //all the messages going towards the bottom right of grid
+	float ** __processedMessages2; //all the messages going towards the upper left of the grid
+
+	float getMessage(vector<int> neighbourNode, vector<int> currentNode);
+	void setMessage(vector<int> neighbourNode, vector<int> currentNode, float message);
+	
+	float normalise(float val1, float val2); //normalises to add to 1, and returns normalised value for val1
 };

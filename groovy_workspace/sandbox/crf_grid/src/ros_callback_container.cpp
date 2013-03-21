@@ -19,9 +19,10 @@ public:
 	void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
 		ROS_INFO("starting processing");
 		this->robot->processLaserScan(msg);
-		cout << "unprocessed:"<< endl;
+//		this->robot->getRobotEnvironment()->generateTestMap();
+//		cout << "unprocessed:"<< endl;
 		this->robot->getRobotEnvironment()->printMap();
-		this->gridOperations->setIterationCount(5);
+		this->gridOperations->setIterationCount(2);
 		this->gridOperations->loopyBeliefPropagation();
 
 		ROS_INFO("finishing processing");
