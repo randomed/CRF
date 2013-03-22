@@ -17,9 +17,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #uncomment if you have defined messages
-rosbuild_genmsg()
+#rosbuild_genmsg()
 #uncomment if you have defined services
-rosbuild_gensrv()
+#rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
@@ -40,6 +40,9 @@ rosbuild_add_compile_flags(environment -lm -std=c++0x)
 rosbuild_add_library(robot src/Robot.cpp)
 rosbuild_add_compile_flags(robot -lm -std=c++0x)
 #rosbuild_add_compile_flags(lib_environment )
+
+
+
 rosbuild_add_executable(robot_simulator src/robot_simulator.cpp)
 rosbuild_add_compile_flags(robot_simulator -std=c++0x -lpthread)
 

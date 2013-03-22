@@ -21,7 +21,7 @@ public:
 		this->robot->processLaserScan(msg);
 //		this->robot->getRobotEnvironment()->generateTestMap();
 //		cout << "unprocessed:"<< endl;
-		this->robot->getRobotEnvironment()->printMap();
+//		this->robot->getRobotEnvironment()->printMap();
 		this->gridOperations->setIterationCount(2);
 		this->gridOperations->loopyBeliefPropagation();
 

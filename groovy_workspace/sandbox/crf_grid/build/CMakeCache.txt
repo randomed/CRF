@@ -316,6 +316,9 @@ lib_environment_LIB_DEPENDS:STATIC=general;roscpp;general;/usr/lib/libboost_sign
 lib_robot_LIB_DEPENDS:STATIC=general;roscpp;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;
 
 //Dependencies for the target
+png_LIB_DEPENDS:STATIC=general;tf;general;message_filters;general;roscpp;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;
+
+//Dependencies for the target
 robot_LIB_DEPENDS:STATIC=general;tf;general;message_filters;general;roscpp;general;/usr/lib/libboost_signals-mt.so;general;/usr/lib/libboost_filesystem-mt.so;general;rosconsole;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;/usr/lib/libboost_date_time-mt.so;general;/usr/lib/libboost_system-mt.so;general;/usr/lib/libboost_thread-mt.so;general;pthread;general;cpp_common;
 
 //The directory containing a CMake configuration file for roslib.

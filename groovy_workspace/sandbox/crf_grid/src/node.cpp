@@ -2,22 +2,26 @@
 
 node::node () {
 	nodeValue = 0.5;
-	neighbours = new std::vector<node *>();
+//	neighbours = new std::vector<node *>();
 	fixed = false;
+	this->variablesTracked = 2;
 };
 
 node::node(std::vector<int> coordinates) {
 	nodeValue = 0.5;
-	neighbours = new std::vector<node*>();
+//	neighbours = new std::vector<node*>();
 	this->coordinates = coordinates;
 	fixed = false;
+	this->variablesTracked = 2;
 };
 
-std::vector<node *> * node::getNeighbours() {
+std::map<node *, vector<float>> node::getNeighbours() {
 	return this->neighbours;
 };
 void node::addNeighbour(node * neighbour) {
-	this->neighbours->push_back(neighbour);
+//	this->neighbours->push_back(neighbour);
+//	this->neighbours[neighbour] = 0.5;
+	this->neighbours[neighbour] = vector<float>(this->variablesTracked, 1);
 };
 
 float node::getValue() {
@@ -67,6 +71,6 @@ bool node::setValue(float value) {
 	}
 };
 
-std::vector<int>	node::getCoordinates() {
-	return this->coordinates;
-}
+int node::getVariablesTracked() {
+	return this->variablesTracked;
+};
