@@ -35,7 +35,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_add_executable(add_two_ints_client src/add_two_ints_client.cpp)
 
 rosbuild_add_library(environment src/Environment.cpp)
-rosbuild_add_compile_flags(environment -lm -std=c++0x)
+rosbuild_add_compile_flags(environment -lm -std=c++0x -lpng)
 
 rosbuild_add_library(robot src/Robot.cpp)
 rosbuild_add_compile_flags(robot -lm -std=c++0x)

@@ -72,15 +72,15 @@ CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/sensor_m
 CMakeFiles/environment.dir/src/Environment.cpp.o: /opt/ros/groovy/share/tf/package.xml
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/random/CRF/groovy_workspace/sandbox/crf_grid/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/environment.dir/src/Environment.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -o CMakeFiles/environment.dir/src/Environment.cpp.o -c /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -lpng -o CMakeFiles/environment.dir/src/Environment.cpp.o -c /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp
 
 CMakeFiles/environment.dir/src/Environment.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/environment.dir/src/Environment.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -E /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp > CMakeFiles/environment.dir/src/Environment.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -lpng -E /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp > CMakeFiles/environment.dir/src/Environment.cpp.i
 
 CMakeFiles/environment.dir/src/Environment.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/environment.dir/src/Environment.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -S /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp -o CMakeFiles/environment.dir/src/Environment.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -lpng -S /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Environment.cpp -o CMakeFiles/environment.dir/src/Environment.cpp.s
 
 CMakeFiles/environment.dir/src/Environment.cpp.o.requires:
 .PHONY : CMakeFiles/environment.dir/src/Environment.cpp.o.requires

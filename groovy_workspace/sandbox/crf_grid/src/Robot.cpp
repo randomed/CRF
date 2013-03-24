@@ -317,6 +317,51 @@ bool Robot::move(Environment *realEnv, int x, int y) { //move the robot: foward 
 	}
 	return true;
 };
+bool Robot::move(int x, int y) {
+	int currentx, currenty;
+
+	currentx = this->coords.first;
+	currenty = this->coords.second;
+
+	if (this->realEnv->checkHashedMapping(currentx + x, currenty + y) || //checks if robot can move to spot
+		currentx + x >= this->realEnv->getGridSizeHorizontal() ||
+		currenty + y >= this->realEnv->getGridSizeVertical() ||
+		currentx + x < 0 ||
+		currenty + x < 0
+		) {
+		return false;
+	}
+	else {
+		this->coords = make_pair(currentx + x, currenty + y);
+		this->realEnv->updateRobotLocation(currentx + x, currenty + y);
+		this->getRobotEnvironment()->updateRobotLocation(currentx + x, currenty + y);
+	}
+
+	return true;
+};
+
+bool Robot::forceMove(int x, int y) {
+	int currentx, currenty;
+
+	currentx = this->coords.first;
+	currenty = this->coords.second;
+	
+	//checks if robot can move to spot
+	if (currentx + x >= this->environment.getGridSizeHorizontal() ||
+		currenty + y >= this->environment.getGridSizeVertical() ||
+		currentx + x < 0 ||
+		currenty + x < 0
+		) {
+		return false;
+	}
+	else {
+		this->coords = make_pair(currentx + x, currenty + y);
+		this->getRobotEnvironment()->updateRobotLocation(currentx + x, currenty + y);
+	}
+
+	return true;
+};
+
 Environment Robot::discretiseReadings(float angleMin, float angleMax, float angleIncrement, float rangeMin, float rangeMax, const float ranges[]) {
 	
 	bool debug = false;
@@ -487,8 +532,7 @@ void Robot::processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
 };
 
 void Robot::moveRobot(const geometry_msgs::Twist::ConstPtr& msg) {
-	ROS_INFO("here");
-
+	this->move(msg->linear.x, msg->linear.y);
 	//move and then send odometry topic
 };
 #endif

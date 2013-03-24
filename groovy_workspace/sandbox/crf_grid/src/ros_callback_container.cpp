@@ -24,7 +24,8 @@ public:
 //		this->robot->getRobotEnvironment()->printMap();
 		this->gridOperations->setIterationCount(2);
 		this->gridOperations->loopyBeliefPropagation();
-
+		
+		this->gridOperations->getProcessedEnvironment()->writeToPNG();
 		ROS_INFO("finishing processing");
 //		this->gridOperations->getProcessedEnvironment()->printMap();
 	};

@@ -6,5 +6,5 @@ CXX_FLAGS = -O2 -g -fPIC -I/home/random/CRF/groovy_workspace/sandbox/crf_grid/in
 
 CXX_DEFINES = -Denvironment_EXPORTS
 
-# TARGET_FLAGS = -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x
+# TARGET_FLAGS = -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -lm -std=c++0x -lpng
 

@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 #include <list>
+#include <png.h>
+#include <stdio.h>
+#include <stdarg.h>
 using namespace std;
 
 class Environment {
@@ -70,5 +73,6 @@ public:
 	void setMap(map<pair<int, int>, float> newMap);
 	map<pair<int, int>, float> getMap();
 //	void clearHashedMapping2() {this->hashedMapping2.clear();};
+	void writeToPNG();
 };
 

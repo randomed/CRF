@@ -21,8 +21,29 @@ int receiveLaserScanThread(Robot * robot) {
 	return 0;
 };
 */
-void sendTwistThread() {}; //receive external message from command line and then send twist?
+void sendTwistThread(Robot * robot) {
+	ros::NodeHandle n;
+	geometry_msgs::Twist scanMessage;
 
+	ros::Publisher chatter_pub = n.advertise<geometry_msgs::Twist>(ROBOTTWISTTOPIC, 2);
+	ros::Rate loop_rate(1);
+	scanMessage.linear.z = 0;
+	
+	int x = 0;
+	while (ros::ok())  {
+		ROS_INFO("sending twist..");
+		x = 3;
+		scanMessage.linear.x = (float) (x % 4);
+		scanMessage.linear.y = 0;
+		
+		robot->forceMove(scanMessage.linear.x, scanMessage.linear.y);
+
+		chatter_pub.publish(scanMessage);
+		ros::spinOnce();
+		loop_rate.sleep();
+	}
+	
+};
 void receiveOdometryThread(Robot * robot) {
 	ros::NodeHandle n;
 //	ros::Subscriber sub = n.subscribe(ROBOTLASERSCANTOPIC, 5, &Robot::processLaserScan, robot);
@@ -38,7 +59,7 @@ int main(int argc, char **argv) {
 	container->setRobot(robot);
 //	boost::thread t_laserScan(receiveLaserScanThread, robot);
 	boost::thread t_laserScan(receiveLaserScanThread, container);
-	boost::thread t_twist(sendTwistThread);
+	boost::thread t_twist(sendTwistThread, robot);
 	boost::thread t_odometry(receiveOdometryThread, robot);
 
 	t_laserScan.join();

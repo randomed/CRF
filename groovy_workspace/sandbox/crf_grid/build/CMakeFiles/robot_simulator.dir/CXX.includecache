@@ -27,6 +27,12 @@ sstream
 -
 list
 -
+png.h
+-
+stdio.h
+-
+stdarg.h
+-
 
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.cpp
 math.h
@@ -71,6 +77,8 @@ nav_msgs/GridCells.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/nav_msgs/GridCells.h
 geometry_msgs/Point.h
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/geometry_msgs/Point.h
+geometry_msgs/Twist.h
+/home/random/CRF/groovy_workspace/sandbox/crf_grid/src/geometry_msgs/Twist.h
 vector
 -
 sstream

@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include "nav_msgs/GridCells.h"
 #include "geometry_msgs/Point.h"
+#include "geometry_msgs/Twist.h"
 #include <vector>
 #include <sstream>
 #include "Robot.cpp"
@@ -15,5 +16,5 @@
 #define ROBOTLASERSCANTOPIC "laser_scan"
 #define ROBOTTWISTTOPIC "twist"
 
-
 void rmcl_getMap();//move this to grid_processor later
+void twistThread(Robot * robot);

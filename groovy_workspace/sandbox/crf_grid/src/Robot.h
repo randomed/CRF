@@ -64,6 +64,8 @@ public:
 	float getOrientation() {return this->Orientation;};
 	void turn(float angle); //turn the robot: clockwise with a positive angle, anti-clockwise with a negative angle
 	bool move(Environment *realEnv, int x, int y); //move the robot: foward with a positive distance, backwards with a negative distance
+	bool move(int x, int y); //move the robot: foward with a positive distance, backwards with a negative distance
+	bool forceMove(int x, int y); //forces robot to move to coordinates without knowledge of ground truth (it can move into occupied spaces)
 	Environment triggerSensors(Environment *realEnv); //returns a mapping of the part of the environment the robot can see, takes in the real environment
 	void setRobotEnvironment(Environment robotEnv) {this->environment = robotEnv;};
 	Environment *getRobotEnvironment() {return &this->environment;};

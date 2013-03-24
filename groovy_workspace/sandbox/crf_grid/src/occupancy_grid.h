@@ -9,7 +9,6 @@
 #include "node.cpp"
 #include<boost/functional/hash.hpp>
 #include <map>
-#include <png++/png.hpp>
 
 template <typename Container> //container for hashing unordered map with vector as a key
 struct container_hash {

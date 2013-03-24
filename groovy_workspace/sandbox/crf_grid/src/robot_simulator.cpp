@@ -79,11 +79,12 @@ void publishRobotPosition(Environment *env) {
 	robot_point.z = 0;
 
 	ros::Publisher chatter_pub = n.advertise<nav_msgs::GridCells>(ROBOTGROUNDTRUTHTOPIC, 5);
-	ros::Rate loop_rate(0.1);
+	ros::Rate loop_rate(1);
 	gridCellsMessage.header.frame_id = "my_frame";
 
 
 	while (ros::ok())  {
+		points.clear();
 		robot_point.x = env->getRobotX();
 		robot_point.y = env->getRobotY();
 		points.push_back(robot_point);
@@ -213,6 +214,12 @@ void rmcl_getMap() {//move this to grid_processor later
 	}
 };
 
+void twistThread(Robot * robot) {
+	ros::NodeHandle n;
+	ros::Subscriber sub = n.subscribe(ROBOTTWISTTOPIC, 2, &Robot::moveRobot, robot);
+	ros::spin();
+};
+
 int main(int argc, char **argv)
 {
 	Environment *env = new Environment();
@@ -223,6 +230,7 @@ int main(int argc, char **argv)
 	boost::thread t_groundTruth(publishEnvironmentThread, env);
 	boost::thread t_robotPosition(publishRobotPosition, env);
 	boost::thread t_odometry(odometryThread, robot, env);
+	boost::thread t_twist(twistThread, robot);
 //	boost::thread t_rmclMap(rmcl_getMap);
 //	Environment robotEnv;
 	
@@ -234,6 +242,7 @@ int main(int argc, char **argv)
 	t_groundTruth.join();
 	t_robotPosition.join();
 	t_odometry.join();
+	t_twist.join();
 //	t_rmclMap.join();
 	return 0;
 };
