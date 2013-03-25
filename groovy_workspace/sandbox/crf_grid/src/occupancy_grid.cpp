@@ -1,7 +1,7 @@
 #ifndef OCCUPANCYGRID_H
 #define OCCUPANCYGRID_H
 #include "occupancy_grid.h"
-#define DEBUG  false
+#define DEBUG  true
 occupancy_grid::occupancy_grid() {
 
 	this->gridSize.push_back(10);
@@ -301,7 +301,7 @@ void occupancy_grid::loopyBeliefPropagation() {
 		//	updater->second->pushTempValue();
 		//}
 //		cout << "-----------" << endl;
-//		this->processedEnvironment->printMap();
+		this->processedEnvironment->printMap();
 	}
 };
 /*
