@@ -3,7 +3,7 @@
 #include "occupancy_grid.h"
 #define DEBUG  false
 occupancy_grid::occupancy_grid() {
-
+	/*
 	this->gridSize.push_back(10);
 	this->constructGrid();
 	this->iterationCount = 1;
@@ -15,7 +15,7 @@ occupancy_grid::occupancy_grid() {
 
 	this->hiddenPotentials.push_back(0.5); //potential for occupied
 	this->hiddenPotentials.push_back(0.5); //potential for non occupied
-	
+	*/
 	/*	
 	this->__processedMessages1 = new float *[gridSizeHorizontal];  
 	this->__processedMessages2 = new float *[gridSizeHorizontal]; 
@@ -43,11 +43,11 @@ occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
 
 	this->processedEnvironment = new Environment(environment);
 
-	this->linkPotentials.push_back(1);
-	this->linkPotentials.push_back(1);
+	this->linkPotentials.push_back(1); //occupied
+	this->linkPotentials.push_back(1); //non occupied
 
-	this->hiddenPotentials.push_back(0.5); //potential for occupied
-	this->hiddenPotentials.push_back(0.5); //potential for non occupied
+	this->hiddenPotentials.push_back(1); //potential for occupied
+	this->hiddenPotentials.push_back(1); //potential for non occupied
 
 	/*
 	this->__processedMessages1 = new float *[gridSizeHorizontal];  
@@ -214,6 +214,7 @@ void occupancy_grid::loopyBeliefPropagation() {
 	queue<node *> unprocessed;
 	std::map<node *, vector<float>>::iterator currentNeighbour;
 	std::map<node *, vector<float>> neighbours;
+	std::ostringstream oss;
 //	vector<int> currentNode;
 //	vector<vector<int>> processed;
 //	queue<vector<int>> unprocessed;
@@ -302,6 +303,10 @@ void occupancy_grid::loopyBeliefPropagation() {
 		//}
 //		cout << "-----------" << endl;
 //		this->processedEnvironment->printMap();
+		oss.str("");
+		oss << iteration + 3;
+		oss << "iteration" << iteration + 1;
+		this->processedEnvironment->writeToFile(oss.str());
 	}
 };
 /*

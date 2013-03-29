@@ -11,8 +11,8 @@ float negativeInverseExponential(float x) {
 };
 
 Environment::Environment() {
-	this->gridSizeHorizontal = 5;
-	this->gridSizeVertical = 5;
+	this->gridSizeHorizontal = 100;
+	this->gridSizeVertical = 100;
 	this->robotCoords = make_pair(0, 0);	
 	this->generateTestMap();
 	this->occupancyValueThreshold = 0.3;
@@ -27,8 +27,8 @@ Environment::Environment(Environment *env) {
 };
 
 Environment::Environment(bool unknownMap) {
-	this->gridSizeHorizontal = 5;
-	this->gridSizeVertical = 5;
+	this->gridSizeHorizontal = 100;
+	this->gridSizeVertical = 100;
 	this->robotCoords = make_pair(0, 0);	
 	this->occupancyValueThreshold = 0.3;
 	if (unknownMap) {
@@ -89,10 +89,11 @@ void Environment::generateTestMap() {
 	//this->setMapping(2, 6, 1);
 	//addHashedMapping(2, 6);
 	
-	srand(time(NULL));
+//	srand(time(NULL));
+	srand(2);
 	
 	//populate randomly
-	/*
+	
 	int randomx, randomy;
 	y = 0;
 	x = 0;
@@ -110,7 +111,6 @@ void Environment::generateTestMap() {
 			}
 		}
 	}	
-	*/
 };
 
 void Environment::generateUnknownMap() {
@@ -173,20 +173,25 @@ float Environment::calculateNewCertainty(list<float> cellHistory, float newOccup
 
 };
 
+void Environment::writeToFile(string fileName) {
+	int x, y;
+	ofstream myFile;
+//	std::string fullPath = "__" + std::string(WRITEFILEPATH) + fileName;
+	std::string fullPath = "__" + fileName;
+	remove(fullPath.c_str());
+	myFile.open(fullPath);
 
-void abort_(const char * s, ...)
-{
-        va_list args;
-        va_start(args, s);
-        vfprintf(stderr, s, args);
-        fprintf(stderr, "\n");
-        va_end(args);
-        abort();
-};
+//	myFile << "X = [";
+	for (y = 0; y < this->getGridSizeHorizontal(); y ++) {
+		for (x = 0; x < this->getGridSizeVertical(); x ++) {
+			myFile << this->getMapping(x, y) << ",";
+		}
+		myFile << ";";
+	}
+//	myFile << "];";
+	myFile.close();
 
-void Environment::writeToPNG() {
-
-	
+	cout << "wrote map to file: " << fullPath << endl;
 };
 
 

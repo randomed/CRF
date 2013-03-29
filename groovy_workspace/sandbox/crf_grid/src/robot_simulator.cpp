@@ -56,6 +56,7 @@ void publishEnvironmentThread(Environment * env) {
 				}
 			}
 		}
+		env->writeToFile("1groundtruth");
 //		ROS_INFO("sending ground truth environment..");
 		gridCellsMessage.header.stamp = ros::Time::now();
 		gridCellsMessage.cells = points;

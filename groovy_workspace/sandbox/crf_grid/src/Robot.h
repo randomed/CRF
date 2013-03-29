@@ -39,7 +39,7 @@ public:
 
 		this->viewAngle *= (atan(1.0) * 4) / 180;
 
-		maxViewDistance = 5;
+		maxViewDistance = 100;
 
 //		this->environment = new Environment(*new Environment());
 //		this->environment = new Environment(true);
