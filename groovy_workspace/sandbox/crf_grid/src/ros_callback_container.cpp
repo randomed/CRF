@@ -44,13 +44,13 @@ public:
 		this->gridOperations = gridOperations;
 	};
 	void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
-		int iterationCount = 10;
+		int iterationCount = 2;
 
 		ROS_INFO("starting processing");
 		this->robot->processLaserScan(msg);
 //		this->robot->getRobotEnvironment()->generateTestMap();
 //		cout << "unprocessed:"<< endl;
-//		this->robot->getRobotEnvironment()->printMap();
+		this->robot->getRobotEnvironment()->printMap();
 //		modifyEnvironment(this->robot->getRobotEnvironment());
 		this->robot->getRobotEnvironment()->writeToFile("2beforelbp");
 		this->gridOperations->setIterationCount(iterationCount);

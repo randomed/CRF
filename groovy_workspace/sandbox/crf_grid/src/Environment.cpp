@@ -27,8 +27,8 @@ Environment::Environment(Environment *env) {
 };
 
 Environment::Environment(bool unknownMap) {
-	this->gridSizeHorizontal = 100;
-	this->gridSizeVertical = 100;
+	this->gridSizeHorizontal = 5;
+	this->gridSizeVertical = 5;
 	this->robotCoords = make_pair(0, 0);	
 	this->occupancyValueThreshold = 0.3;
 	if (unknownMap) {

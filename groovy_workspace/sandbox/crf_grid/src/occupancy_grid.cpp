@@ -1,7 +1,7 @@
 #ifndef OCCUPANCYGRID_H
 #define OCCUPANCYGRID_H
 #include "occupancy_grid.h"
-#define DEBUG  false
+#define DEBUG  true
 occupancy_grid::occupancy_grid() {
 	/*
 	this->gridSize.push_back(10);
@@ -43,10 +43,10 @@ occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
 
 	this->processedEnvironment = new Environment(environment);
 
-	this->linkPotentials.push_back(1); //occupied
-	this->linkPotentials.push_back(1); //non occupied
+	this->linkPotentials.push_back(10); //occupied
+	this->linkPotentials.push_back(5); //non occupied
 
-	this->hiddenPotentials.push_back(1); //potential for occupied
+	this->hiddenPotentials.push_back(5); //potential for occupied
 	this->hiddenPotentials.push_back(1); //potential for non occupied
 
 	/*
@@ -302,7 +302,7 @@ void occupancy_grid::loopyBeliefPropagation() {
 		//	updater->second->pushTempValue();
 		//}
 //		cout << "-----------" << endl;
-//		this->processedEnvironment->printMap();
+		this->processedEnvironment->printMap();
 		oss.str("");
 		oss << iteration + 3;
 		oss << "iteration" << iteration + 1;
@@ -376,7 +376,7 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 	std::map<node *, vector<float>> n, nn; //neighbours, neighbour's neighbour
 	std::map<node *, vector<float>>::iterator currentn, currentnn;
 	int variablesTracked = currentNode->getVariablesTracked();
-	vector<float> defaultVector = vector<float>(variablesTracked, 1), beliefVector, beliefSum = vector<float>(variablesTracked, 0);
+	vector<float> defaultVector = vector<float>(variablesTracked, 1), beliefVector, beliefSum = vector<float>(variablesTracked, 0), beliefProduct = vector<float>(variablesTracked, 1);
 	int neighbourX, neighbourY, currentX = currentNode->getCoords()[0], currentY = currentNode->getCoords()[1];	
 	float occupancyBelief = 0;
 	vector<float> neighbourProduct = defaultVector;
@@ -425,6 +425,7 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 		}		
 		//add processed incoming message to belief update vector
 		this->variableSum(&beliefSum, neighbourProduct);
+		this->variableProduct(&beliefProduct, neighbourProduct);
 	}
 		
 	//factor in current node's beliefs
@@ -436,6 +437,7 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 	beliefVector.push_back(occupancyBelief);
 	beliefVector.push_back(1 - occupancyBelief);
 	this->variableSum(&beliefSum, beliefVector);
+	this->variableProduct(&beliefProduct, beliefVector);
 
 	//factor in current node's observation and link potential
 	occupancyBelief = this->externalEnvironment->getMapping(currentX, currentY);
@@ -447,11 +449,15 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 	beliefVector.push_back(1 - occupancyBelief);
 	this->variableProduct(&beliefVector, this->linkPotentials);
 	this->variableSum(&beliefSum, beliefVector);	
-	
+	this->variableProduct(&beliefProduct, beliefVector);
+
 	this->variableNormalise(&beliefSum);
+	this->variableNormalise(&beliefProduct);
 	if (DEBUG) {
-		cout << "update " << currentX << ", " << currentY << " : " << beliefSum[0] << "\n" << endl;
+		//cout << "update " << currentX << ", " << currentY << " : " << beliefSum[0] << "\n" << endl;
+		cout << "update " << currentX << ", " << currentY << " : " << beliefProduct[0] << "\n" << endl;
 	}
+	return beliefProduct[0];
 	return beliefSum[0];
 };
 
