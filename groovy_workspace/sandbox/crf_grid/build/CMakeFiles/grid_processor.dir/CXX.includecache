@@ -33,6 +33,8 @@ stdarg.h
 -
 fstream
 -
+boost/algorithm/string.hpp
+-
 
 /home/random/CRF/groovy_workspace/sandbox/crf_grid/src/Robot.cpp
 math.h

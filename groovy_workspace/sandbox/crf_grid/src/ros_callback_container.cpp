@@ -60,5 +60,12 @@ public:
 		this->gridOperations->getProcessedEnvironment()->writeToFile("afterlbp");
 		ROS_INFO("finishing processing");
 //		this->gridOperations->getProcessedEnvironment()->printMap();
+
+		//section to compare lbp against matlab implementation
+		Environment * matlabEnv = new Environment(true);
+		matlabEnv->readFromFile("matlab_noisy");
+		occupancy_grid * matlabComparison = new occupancy_grid(matlabEnv, 2);
+		matlabComparison->loopyBeliefPropagation();
+		matlabComparison->getProcessedEnvironment()->writeToFile("matlabafterlbp");
 	};
 };
