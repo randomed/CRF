@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <fstream>
+#include <boost/algorithm/string.hpp>
 #define WRITEFILEPATH "$HOME/CRF/gridplot/" //this doesn't work right now
 
 using namespace std;
@@ -76,5 +77,6 @@ public:
 	map<pair<int, int>, float> getMap();
 //	void clearHashedMapping2() {this->hashedMapping2.clear();};
 	void writeToFile(string fileName); //dump occupancy grid to file
+	void readFromFile(string fileName); //read from occupancy grid dump
 };
 

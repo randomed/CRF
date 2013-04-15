@@ -1,7 +1,7 @@
 #ifndef OCCUPANCYGRID_H
 #define OCCUPANCYGRID_H
 #include "occupancy_grid.h"
-#define DEBUG  true
+#define DEBUG  false
 occupancy_grid::occupancy_grid() {
 	/*
 	this->gridSize.push_back(10);
@@ -43,11 +43,11 @@ occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
 
 	this->processedEnvironment = new Environment(environment);
 
-	this->linkPotentials.push_back(10); //occupied
+	this->linkPotentials.push_back(5); //occupied
 	this->linkPotentials.push_back(5); //non occupied
 
 	this->hiddenPotentials.push_back(5); //potential for occupied
-	this->hiddenPotentials.push_back(1); //potential for non occupied
+	this->hiddenPotentials.push_back(5); //potential for non occupied
 
 	/*
 	this->__processedMessages1 = new float *[gridSizeHorizontal];  
@@ -457,7 +457,7 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 		//cout << "update " << currentX << ", " << currentY << " : " << beliefSum[0] << "\n" << endl;
 		cout << "update " << currentX << ", " << currentY << " : " << beliefProduct[0] << "\n" << endl;
 	}
-	return beliefProduct[0];
+//	return beliefProduct[0];
 	return beliefSum[0];
 };
 

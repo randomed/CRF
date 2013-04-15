@@ -194,5 +194,26 @@ void Environment::writeToFile(string fileName) {
 	cout << "wrote map to file: " << fullPath << endl;
 };
 
+void Environment::readFromFile(string fileName) {
+	string line;
+	ifstream f(fileName);
+	std::vector<std::string> rows;
+	std::vector<std::string> pixels;
+	unsigned int x, y;
+	if (f.is_open()) {
+		getline(f, line);	
+		boost::split(rows, line, boost::is_any_of(";"));
+		for (y = 0; y < rows.size(); y ++) {
+			boost::split(pixels, rows[y], boost::is_any_of(","));
+			for (x = 0; x < pixels.size(); x++) {
+//				cout << pixels[x];
+				this->setMapping(x, y, atof(pixels[x].c_str()));
+				cout <<  atof(pixels[x].c_str());
+			}
+		}
+	}
+	this->gridSizeHorizontal = rows.size();;
+	this->gridSizeVertical = rows.size();
+};
 
 #endif
