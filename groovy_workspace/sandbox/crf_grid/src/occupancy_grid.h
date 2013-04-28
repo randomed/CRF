@@ -39,6 +39,7 @@ public:
 	node * getNode(vector<int> coordinates);
 	void setIterationCount(int iterationCount);
 	Environment * getProcessedEnvironment();
+	void validation(Environment * groundTruth); //cross validation
 
 private:
 	void __constructGrid(node * currentNode); //recusive function to iterate through all coordinates

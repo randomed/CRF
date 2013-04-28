@@ -67,5 +67,14 @@ public:
 //		occupancy_grid * matlabComparison = new occupancy_grid(matlabEnv, 2);
 //		matlabComparison->loopyBeliefPropagation();
 //		matlabComparison->getProcessedEnvironment()->writeToFile("matlabafterlbp");
+
+		//section for testing methods
+		Environment * testingEnv = new Environment(this->robot->getRobotEnvironment());
+		Environment * groundTruth = new Environment();
+		occupancy_grid * tester = new occupancy_grid(testingEnv, 1);
+//		testingEnv->printMap();
+//		cout << "------------" << endl;
+//		this->robot->getRobotEnvironment()->printMap();
+		tester->validation(groundTruth);
 	};
 };

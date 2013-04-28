@@ -1,7 +1,7 @@
 #ifndef OCCUPANCYGRID_H
 #define OCCUPANCYGRID_H
 #include "occupancy_grid.h"
-#define DEBUG  true
+#define DEBUG  false
 occupancy_grid::occupancy_grid() {
 	/*
 	this->gridSize.push_back(10);
@@ -43,7 +43,7 @@ occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
 
 	this->processedEnvironment = new Environment(environment);
 
-	this->hiddenPotentials.push_back(2); //occupied - occupied
+	this->hiddenPotentials.push_back(3); //occupied - occupied
 	this->hiddenPotentials.push_back(1); //occupied - non occupied
 	this->hiddenPotentials.push_back(1); //non occupied - occupied
 	this->hiddenPotentials.push_back(2); //non occupied - non occupied
@@ -522,5 +522,45 @@ void occupancy_grid::printGrid() {
 		}
 		cout << endl << endl;
 	}
+};
+
+void occupancy_grid::validation(Environment * groundTruth) {
+	int x, y, truePositives = 0, trueNegatives = 0, falsePositives = 0, falseNegatives = 0;
+	float trueOccupancy = 0.5, inferredOccupancy = 0.5;
+	//loop through every cell and set it as unknown and then perform lbp
+	for (x = 0; x < this->externalEnvironment->getGridSizeHorizontal(); x++) {
+		for (y = 0; y < this->externalEnvironment->getGridSizeVertical(); y++) {
+			trueOccupancy = this->externalEnvironment->getMapping(x, y);
+
+			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
+
+			this->externalEnvironment->setMapping(x, y, 0.5);
+			this->loopyBeliefPropagation();
+			
+			inferredOccupancy = this->processedEnvironment->getMapping(x, y);	
+			this->externalEnvironment->setMapping(x, y, trueOccupancy);
+
+			if (inferredOccupancy > 0.5 && trueOccupancy > 0.5) {
+				//true positive for occupied classification
+				truePositives++;
+			}
+			else if (inferredOccupancy > 0.5 && trueOccupancy < 0.5) {
+				//true negative for occupied classification
+				trueNegatives++;
+			}
+			else if (inferredOccupancy < 0.5 && trueOccupancy < 0.5) {
+				//false negative for occupied classification
+				falseNegatives++;
+			}
+			else if (inferredOccupancy < 0.5 && trueOccupancy > 0.5) {
+				//false positive for occupied classification
+				falsePositives++;
+			}
+		}
+	}
+	
+	cout << "truePositives = " << truePositives << " - trueNegatives = " << trueNegatives
+	<< " - falsePositives = " << falsePositives << " - falseNegatives = " << falseNegatives << endl;
+
 };
 #endif

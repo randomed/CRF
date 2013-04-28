@@ -22,7 +22,7 @@ Environment::Environment(Environment *env) {
 	this->gridSizeHorizontal = env->gridSizeHorizontal;
 	this->gridSizeVertical = env->gridSizeVertical;
 	this->robotCoords = env->robotCoords;
-	this->generateUnknownMap();
+	this->mapping = env->getMap();
 	this->occupancyValueThreshold = 0.3;
 };
 
