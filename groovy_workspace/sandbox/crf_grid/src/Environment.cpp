@@ -191,7 +191,7 @@ void Environment::writeToFile(string fileName) {
 //	myFile << "];";
 	myFile.close();
 
-	cout << "wrote map to file: " << fullPath << endl;
+//	cout << "wrote map to file: " << fullPath << endl;
 };
 
 void Environment::readFromFile(string fileName) {
@@ -216,4 +216,15 @@ void Environment::readFromFile(string fileName) {
 	this->gridSizeVertical = rows.size();
 };
 
+float Environment::calculateError(Environment * env) {
+	int x, y;
+	float errorTotal = 0; 
+	for (x = 0; x < this->gridSizeHorizontal; x++) {
+		for (y = 0; y < this->gridSizeVertical; y++) {
+			errorTotal += pow(env->getMapping(x, y) - this->getMapping(x, y), 2);
+		}
+	}
+	
+	return errorTotal / (this->gridSizeHorizontal * this->gridSizeVertical);
+};
 #endif

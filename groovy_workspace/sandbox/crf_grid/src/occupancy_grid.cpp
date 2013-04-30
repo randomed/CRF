@@ -223,7 +223,7 @@ void occupancy_grid::loopyBeliefPropagation() {
 //	vector<vector<int>> neighbours;
 //	vector<vector<int>>::iterator currentNeighbour, processedIt;
 
-	ROS_INFO("starting LBP...");	
+//	ROS_INFO("starting LBP...");	
 //	int gridSizeHorizontal = this->externalEnvironment->getGridSizeHorizontal(), gridSizeVertical = this->externalEnvironment->getGridSizeVertical();	
 	//reset messages
 //	for(int i = 0; i < gridSizeHorizontal; i++) {
@@ -304,7 +304,7 @@ void occupancy_grid::loopyBeliefPropagation() {
 		//	updater->second->pushTempValue();
 		//}
 //		cout << "-----------" << endl;
-		this->processedEnvironment->printMap();
+//		this->processedEnvironment->printMap();
 		oss.str("");
 		oss << iteration + 3;
 		oss << "iteration" << iteration + 1;
@@ -524,6 +524,85 @@ void occupancy_grid::printGrid() {
 	}
 };
 
+void occupancy_grid::learnParameters(Environment * groundTruth) {
+	bool atMinimum = false;
+	float currentError = 1, newError = 0;
+	vector<float> linkPotentialJump; //vectors for the value and direction to shift each parameter
+	vector<float> hiddenPotentialJump; //vectors for the value and direction to shift each parameter
+	float jumpValue = 0.01; //how much each iteration will adjust the parameters by
+	unsigned int i;
+	
+	this->loopyBeliefPropagation();
+	currentError = this->processedEnvironment->calculateError(groundTruth); //initial error with default parameters
+
+	//determine which direction to jump in for each parameter
+	
+	//calculating link potentials
+	for (i = 0; i < this->linkPotentials.size(); i++) {
+		this->linkPotentials[i] += jumpValue;
+		this->loopyBeliefPropagation();
+		newError = this->processedEnvironment->calculateError(groundTruth);
+		if (newError < currentError) {
+			linkPotentialJump.push_back(jumpValue);
+		}
+		else {
+			linkPotentialJump.push_back(-jumpValue);
+		}
+		currentError = newError;
+	}
+	
+	//calculating hidden potentials
+	for (i = 0; i < this->hiddenPotentials.size(); i++) {
+		this->hiddenPotentials[i] += jumpValue;
+		this->loopyBeliefPropagation();
+		newError = this->processedEnvironment->calculateError(groundTruth);
+		if (newError < currentError) {
+			hiddenPotentialJump.push_back(jumpValue);
+		}
+		else {
+			hiddenPotentialJump.push_back(-jumpValue);
+		}
+		currentError = newError;
+	}
+
+	//gradient descent on a concave likelihood function
+	while (!atMinimum) {
+		atMinimum = true;
+		
+		//link potential tuning
+		for (i = 0; i < this->linkPotentials.size(); i++) {
+			this->linkPotentials[i] += linkPotentialJump[i];
+			this->loopyBeliefPropagation();
+			newError = this->processedEnvironment->calculateError(groundTruth); 
+			if (newError < currentError) {
+				currentError = newError;
+				atMinimum = false;
+			}
+			else {
+				this->linkPotentials[i] -= linkPotentialJump[i];
+			}
+		}
+		
+		//hidden potential tuning
+		for (i = 0; i < this->hiddenPotentials.size(); i++) {
+			this->hiddenPotentials[i] += linkPotentialJump[i];
+			this->loopyBeliefPropagation();
+			newError = this->processedEnvironment->calculateError(groundTruth); 
+			if (newError < currentError) {
+				currentError = newError;
+				atMinimum = false;
+			}
+			else {
+				this->hiddenPotentials[i] -= linkPotentialJump[i];
+			}
+		}
+
+	}
+
+	cout << "occupied link potential = " << this->linkPotentials[0] << " empty link potential = " << this->linkPotentials[1] << " mse = " << currentError << endl;
+};
+
+
 void occupancy_grid::validation(Environment * groundTruth) {
 	int x, y, truePositives = 0, trueNegatives = 0, falsePositives = 0, falseNegatives = 0;
 	float trueOccupancy = 0.5, inferredOccupancy = 0.5;
@@ -532,7 +611,7 @@ void occupancy_grid::validation(Environment * groundTruth) {
 		for (y = 0; y < this->externalEnvironment->getGridSizeVertical(); y++) {
 			trueOccupancy = this->externalEnvironment->getMapping(x, y);
 
-			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
+//			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
 
 			this->externalEnvironment->setMapping(x, y, 0.5);
 			this->loopyBeliefPropagation();

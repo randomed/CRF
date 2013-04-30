@@ -40,6 +40,7 @@ public:
 	void setIterationCount(int iterationCount);
 	Environment * getProcessedEnvironment();
 	void validation(Environment * groundTruth); //cross validation
+	void learnParameters(Environment * groundTruth); //gradient descent of mean square error to learn pairwise potentials
 
 private:
 	void __constructGrid(node * currentNode); //recusive function to iterate through all coordinates

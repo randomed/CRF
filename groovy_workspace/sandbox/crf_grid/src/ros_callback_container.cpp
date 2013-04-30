@@ -33,27 +33,41 @@ class callbackContainer {
 private:
 	Robot * robot;
 	occupancy_grid * gridOperations;
+	Environment * groundTruth; //this is created off a random seed so that it is the same in the simulator, >>there is no actual data being passed from the simulator<<
+	bool learnOnce; //tracks if the parameters for lbp have been learnt already
 public:
 
-	callbackContainer() {};
+	callbackContainer() {
+		this->groundTruth = new Environment();	
+		this->learnOnce = true;
+	};
 	void setRobot(Robot * robot) {
 		this->robot = robot;
 	}
 	
-	void setOccupancyGrid(occupancy_grid* gridOperations) {
+	void setOccupancyGrid(occupancy_grid* gridOperations) { //this needs to be called after setRobot, so that an initial laser scan is processed and parameters can be learnt from it 
 		this->gridOperations = gridOperations;
+		int iterationCount = 3;
+		this->gridOperations->setIterationCount(iterationCount);
 	};
 	void processLaserScan(const sensor_msgs::LaserScan::ConstPtr& msg) {
-		int iterationCount = 3;
-
+		float meanError;
 		ROS_INFO("starting processing");
 		this->robot->processLaserScan(msg);
+		
+
+		//learn parameters after at least one laser scan
+		if (learnOnce) {
+			this->gridOperations->learnParameters(this->groundTruth);
+			this->learnOnce = false;
+		}
+
 //		this->robot->getRobotEnvironment()->generateTestMap();
 //		cout << "unprocessed:"<< endl;
-		this->robot->getRobotEnvironment()->printMap();
+//		groundTruth->printMap();
+//		this->robot->getRobotEnvironment()->printMap();
 //		modifyEnvironment(this->robot->getRobotEnvironment());
 		this->robot->getRobotEnvironment()->writeToFile("2beforelbp");
-		this->gridOperations->setIterationCount(iterationCount);
 		this->gridOperations->loopyBeliefPropagation();
 		
 //		this->gridOperations->getProcessedEnvironment()->printMap();		
@@ -67,14 +81,13 @@ public:
 //		occupancy_grid * matlabComparison = new occupancy_grid(matlabEnv, 2);
 //		matlabComparison->loopyBeliefPropagation();
 //		matlabComparison->getProcessedEnvironment()->writeToFile("matlabafterlbp");
-
+		
 		//section for testing methods
 		Environment * testingEnv = new Environment(this->robot->getRobotEnvironment());
-		Environment * groundTruth = new Environment();
 		occupancy_grid * tester = new occupancy_grid(testingEnv, 1);
 //		testingEnv->printMap();
 //		cout << "------------" << endl;
 //		this->robot->getRobotEnvironment()->printMap();
-		tester->validation(groundTruth);
+//		tester->validation(groundTruth);
 	};
 };
