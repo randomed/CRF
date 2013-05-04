@@ -27,8 +27,8 @@ Environment::Environment(Environment *env) {
 };
 
 Environment::Environment(bool unknownMap) {
-	this->gridSizeHorizontal = 5;
-	this->gridSizeVertical = 5;
+	this->gridSizeHorizontal = 10;
+	this->gridSizeVertical = 10;
 	this->robotCoords = make_pair(0, 0);	
 	this->occupancyValueThreshold = 0.3;
 	if (unknownMap) {
@@ -89,11 +89,30 @@ void Environment::generateTestMap() {
 	//this->setMapping(2, 6, 1);
 	//addHashedMapping(2, 6);
 	
+	//testing set for hardcoded wall
+	/*
+	this->setMapping(1, 8, 1);
+	addHashedMapping(1, 8);
+	this->setMapping(2, 8, 1);
+	addHashedMapping(2, 8);
+	this->setMapping(3, 8, 1);
+	addHashedMapping(3, 8);	
+	this->setMapping(4, 8, 1);
+	addHashedMapping(4, 8);
+	this->setMapping(5, 8, 1);
+	addHashedMapping(5, 8);	
+	this->setMapping(6, 9, 1);
+	addHashedMapping(6, 9);	
+	this->setMapping(7, 8, 1);
+	addHashedMapping(7, 8);	
+	this->setMapping(8, 9, 1);
+	addHashedMapping(8, 9);
+	*/
 //	srand(time(NULL));
 	srand(2);
 	
 	//populate randomly
-	
+/*	
 	int randomx, randomy;
 	y = 0;
 	x = 0;
@@ -111,6 +130,7 @@ void Environment::generateTestMap() {
 			}
 		}
 	}	
+*/
 };
 
 void Environment::generateUnknownMap() {
@@ -208,12 +228,12 @@ void Environment::readFromFile(string fileName) {
 			for (x = 0; x < pixels.size(); x++) {
 //				cout << pixels[x];
 				this->setMapping(x, y, atof(pixels[x].c_str()));
-				cout <<  atof(pixels[x].c_str());
+//				cout <<  atof(pixels[x].c_str());
 			}
 		}
 	}
-	this->gridSizeHorizontal = rows.size();;
-	this->gridSizeVertical = rows.size();
+	this->gridSizeHorizontal = rows.size() - 1;
+	this->gridSizeVertical = rows.size() - 1;
 };
 
 float Environment::calculateError(Environment * env) {

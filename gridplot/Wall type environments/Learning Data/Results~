@@ -1,0 +1,24 @@
+10 -1
+1 - 1
+
+grid before lbp mse = 0.104413
+grid after lbp no learning mse = 0.067764
+
+occupied link potential = 1.1 empty link potential = 1.1 o-o = 7.89999 o-e = 2.4 e-o =-0.8 e-e = 12.3 mse = 0.0605633
+
+truePositives = 10 - trueNegatives = 52 - falsePositives = 1 - falseNegatives = 1
+
+
+0.5 does not get include in the validation results
+
+truePositives = 0 - trueNegatives = 53 - falsePositives = 0 - falseNegatives = 11
+truePositives = 0 - trueNegatives = 53 - falsePositives = 0 - falseNegatives = 11
+truePositives = 0 - trueNegatives = 53 - falsePositives = 0 - falseNegatives = 11
+truePositives = 0 - trueNegatives = 53 - falsePositives = 0 - falseNegatives = 11
+truePositives = 7 - trueNegatives = 52 - falsePositives = 1 - falseNegatives = 4
+truePositives = 10 - trueNegatives = 39 - falsePositives = 14 - falseNegatives = 1
+truePositives = 10 - trueNegatives = 29 - falsePositives = 24 - falseNegatives = 1
+truePositives = 11 - trueNegatives = 17 - falsePositives = 36 - falseNegatives = 0
+truePositives = 11 - trueNegatives = 10 - falsePositives = 43 - falseNegatives = 0
+truePositives = 11 - trueNegatives = 7 - falsePositives = 46 - falseNegatives = 0
+

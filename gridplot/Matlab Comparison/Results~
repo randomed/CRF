@@ -1,0 +1,22 @@
+ no lbp mse = 0.0824898
+lbp without learning mse = 0.021887
+occupied link potential = 1.2 empty link potential = 1 o-o = 10.1 o-e = 1.2 e-o =1.1 e-e = 10.1 mse = 0.0196763
+
+
+ 10  1    1
+ 1  10    1
+
+
+truePositives = 713 - trueNegatives = 235 - falsePositives = 20 - falseNegatives = 36
+
+
+after learning
+truePositives = 723 - trueNegatives = 219 - falsePositives = 36 - falseNegatives = 26
+
+ROC curve
+
+^CtruePositives = 695 - trueNegatives = 243 - falsePositives = 12 - falseNegatives = 54
+truePositives = 723 - trueNegatives = 219 - falsePositives = 36 - falseNegatives = 26
+truePositives = 749 - trueNegatives = 86 - falsePositives = 169 - falseNegatives = 0
+truePositives = 749 - trueNegatives = 19 - falsePositives = 236 - falseNegatives = 0
+truePositives = 749 - trueNegatives = 6 - falsePositives = 249 - falseNegatives = 0

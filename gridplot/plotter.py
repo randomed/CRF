@@ -13,7 +13,6 @@ def readFromFile(fileName):
 	for y in range(len(grid)):
 		currentColumn = grid[y].split(',')[:-1]
 		newColumn = []
-		
 		for x in range(len(currentColumn)):
 #			print currentColumn
 			red = 255 * (float(currentColumn[x]))

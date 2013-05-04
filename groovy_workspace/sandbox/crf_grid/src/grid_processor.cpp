@@ -31,7 +31,7 @@ void sendTwistThread(Robot * robot) {
 	
 	int x = 0;
 	while (ros::ok())  {
-		ROS_INFO("sending twist..");
+//		ROS_INFO("sending twist..");
 //		x = 3;
 		scanMessage.linear.x = (float) (x % 4);
 		scanMessage.linear.y = 0;

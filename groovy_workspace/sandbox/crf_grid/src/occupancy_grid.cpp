@@ -43,10 +43,10 @@ occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
 
 	this->processedEnvironment = new Environment(environment);
 
-	this->hiddenPotentials.push_back(3); //occupied - occupied
+	this->hiddenPotentials.push_back(10); //occupied - occupied
 	this->hiddenPotentials.push_back(1); //occupied - non occupied
 	this->hiddenPotentials.push_back(1); //non occupied - occupied
-	this->hiddenPotentials.push_back(2); //non occupied - non occupied
+	this->hiddenPotentials.push_back(10); //non occupied - non occupied
 	
 	this->linkPotentials.push_back(1); //potential for occupied
 	this->linkPotentials.push_back(1); //potential for non occupied
@@ -117,6 +117,18 @@ float occupancy_grid::normalise(float val1, float val2) {
 	return (1 / (val1 + val2)) * val1;
 };
 
+void occupancy_grid::setHiddenPotentials(vector<float> potentials) {
+	this->hiddenPotentials = potentials;
+};
+void occupancy_grid::setLinkPotentials(vector<float> potentials) {
+	this->linkPotentials = potentials;
+};
+void occupancy_grid::incrementHiddenPotential(float jump) {
+	this->hiddenPotentials[0] += jump;
+	this->hiddenPotentials[1] += jump;
+
+//	this->linkPotentials[0] += jump; //temporary test to get ROC curves working
+};
 node * occupancy_grid::getNode(int x, int y) { //gets node in a 2d grid
 	vector<int> coordinates;
 	coordinates.push_back(x);
@@ -529,7 +541,7 @@ void occupancy_grid::learnParameters(Environment * groundTruth) {
 	float currentError = 1, newError = 0;
 	vector<float> linkPotentialJump; //vectors for the value and direction to shift each parameter
 	vector<float> hiddenPotentialJump; //vectors for the value and direction to shift each parameter
-	float jumpValue = 0.01; //how much each iteration will adjust the parameters by
+	float jumpValue = 0.1; //how much each iteration will adjust the parameters by
 	unsigned int i;
 	
 	this->loopyBeliefPropagation();
@@ -585,7 +597,7 @@ void occupancy_grid::learnParameters(Environment * groundTruth) {
 		
 		//hidden potential tuning
 		for (i = 0; i < this->hiddenPotentials.size(); i++) {
-			this->hiddenPotentials[i] += linkPotentialJump[i];
+			this->hiddenPotentials[i] += hiddenPotentialJump[i];
 			this->loopyBeliefPropagation();
 			newError = this->processedEnvironment->calculateError(groundTruth); 
 			if (newError < currentError) {
@@ -593,13 +605,13 @@ void occupancy_grid::learnParameters(Environment * groundTruth) {
 				atMinimum = false;
 			}
 			else {
-				this->hiddenPotentials[i] -= linkPotentialJump[i];
+				this->hiddenPotentials[i] -= hiddenPotentialJump[i];
 			}
 		}
 
 	}
 
-	cout << "occupied link potential = " << this->linkPotentials[0] << " empty link potential = " << this->linkPotentials[1] << " mse = " << currentError << endl;
+	cout << "occupied link potential = " << this->linkPotentials[0] << " empty link potential = " << this->linkPotentials[1] << " o-o = " << this->hiddenPotentials[0] << " o-e = " << this->hiddenPotentials[1] << " e-o =" << this->hiddenPotentials[2] << " e-e = " << this->hiddenPotentials[3] <<  " mse = " << currentError << endl;
 };
 
 
@@ -623,15 +635,15 @@ void occupancy_grid::validation(Environment * groundTruth) {
 				//true positive for occupied classification
 				truePositives++;
 			}
-			else if (inferredOccupancy > 0.5 && trueOccupancy < 0.5) {
+			else if (inferredOccupancy < 0.5 && trueOccupancy < 0.5) {
 				//true negative for occupied classification
 				trueNegatives++;
 			}
-			else if (inferredOccupancy < 0.5 && trueOccupancy < 0.5) {
+			else if (inferredOccupancy < 0.5 && trueOccupancy > 0.5) {
 				//false negative for occupied classification
 				falseNegatives++;
 			}
-			else if (inferredOccupancy < 0.5 && trueOccupancy > 0.5) {
+			else if (inferredOccupancy > 0.5 && trueOccupancy < 0.5) {
 				//false positive for occupied classification
 				falsePositives++;
 			}

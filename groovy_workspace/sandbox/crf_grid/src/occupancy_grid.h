@@ -41,7 +41,9 @@ public:
 	Environment * getProcessedEnvironment();
 	void validation(Environment * groundTruth); //cross validation
 	void learnParameters(Environment * groundTruth); //gradient descent of mean square error to learn pairwise potentials
-
+	void incrementHiddenPotential(float jump);
+	void setHiddenPotentials(vector<float> potentials);
+	void setLinkPotentials(vector<float> potentials);
 private:
 	void __constructGrid(node * currentNode); //recusive function to iterate through all coordinates
 	float calculateIncomingMessages(node * currentNode); //calculates the product of all incoming messages from all function node to variable node
