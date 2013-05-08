@@ -50,10 +50,42 @@ def batchWrite():
 def writeToGIF(fileArray):
 	gifs.writeGif("test.gif", fileArray, duration = 10)	
 
+def drawBoxEnvironment(fileName):
+	f = open(fileName, 'w')
+	outputString = ""
+	
+	#define default environment
+	grid = []
+	gridSize = 25
+	for y in range(gridSize):
+		row = []
+		for x in range(gridSize):
+			row += [0.0] #default value of cells
+		grid.append(row)
+	#draw boxes
+	boxDistance = 5	
+	for boxX in range(1, gridSize, boxDistance):
+		for boxY in range(1, gridSize, boxDistance):
+			boxSize = 2
+			for edge in range(boxSize + 1):
+				defaultOccupiedValue = 1
+				grid[boxX + edge][boxY] = defaultOccupiedValue 
+				grid[boxX][boxY + edge] = defaultOccupiedValue  
+				grid[boxX + edge][boxY + boxSize] = defaultOccupiedValue  
+				grid[boxX + boxSize][boxY + edge] = defaultOccupiedValue
+			grid[boxX + 1][boxY + 1] = 0
+	for row in grid:
+		outputString += ','.join(map(lambda x: str(x), row)) + ','
+		outputString += ';'
+#		print '\t'.join(map(lambda x: str(x), row))
+#	print outputString
+	f.write(outputString)
+	f.close()
 if __name__ == "__main__":
 #	fileName = 'test1'
 #	fileArray = readFromFile(fileName)
 #	print fileArray
-	batchWrite()
 
+	drawBoxEnvironment("__boxscan")
+	batchWrite()
 #	writeToPNG(fileName, fileArray)

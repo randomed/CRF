@@ -30,13 +30,45 @@ void modifyEnvironment(Environment * env) {
 	}
 	*/
 	
+	env->setMapping(2, 2, 1);	
+	env->setMapping(3, 2, 1);	
+	env->setMapping(4, 2, 1);	
+	env->setMapping(2, 3, 1);	
 	env->setMapping(3, 3, 1);	
 	env->setMapping(4, 3, 1);	
-	env->setMapping(4, 4, 1);	
-	env->setMapping(3, 5, 1);	
-	env->setMapping(2, 5, 1);	
-	env->setMapping(4, 5, 1);	
+	env->setMapping(2, 4, 1);	
 	env->setMapping(3, 4, 1);	
+	env->setMapping(4, 4, 1);	
+	
+	env->setMapping(9, 2, 1);	
+	env->setMapping(10, 2, 1);	
+	env->setMapping(11, 2, 1);	
+	env->setMapping(9, 3, 1);	
+	env->setMapping(10, 3, 1);	
+	env->setMapping(11, 3, 1);	
+	env->setMapping(9, 4, 1);	
+	env->setMapping(10, 4, 1);	
+	env->setMapping(11, 4, 1);
+	
+	env->setMapping(2, 9, 1);	
+	env->setMapping(3, 9, 1);	
+	env->setMapping(4, 9, 1);	
+	env->setMapping(2, 10, 1);	
+	env->setMapping(3, 10, 1);	
+	env->setMapping(4, 10, 1);	
+	env->setMapping(2, 11, 1);	
+	env->setMapping(3, 11, 1);	
+	env->setMapping(4, 11, 1);	
+	
+	env->setMapping(9, 9, 1);	
+	env->setMapping(10,9, 1);	
+	env->setMapping(11,9, 1);	
+	env->setMapping(9, 10, 1);	
+	env->setMapping(10,10, 1);	
+	env->setMapping(11,10, 1);	
+	env->setMapping(9, 11, 1);	
+	env->setMapping(10, 11, 1);	
+	env->setMapping(11, 11, 1);		
 };
 class callbackContainer {
 
@@ -87,17 +119,50 @@ public:
 		
 		Environment * learningSetGroundTruth = new Environment(false);
 		Environment * learningSetScan = new Environment(false);
-		modifyEnvironment(learningSetGroundTruth);
-		modifyEnvironment(learningSetScan);
-		learningSetScan->setMapping(3, 4, 0.5);
-		occupancy_grid * sandboxTest = new occupancy_grid(learningSetScan, 2);
-		sandboxTest->learnParameters(learningSetGroundTruth);
+		learningSetGroundTruth->readFromFile("box unfilled learning ground truth");
+		learningSetScan->readFromFile("box learning scan");
+//		modifyEnvironment(learningSetGroundTruth);
+//		modifyEnvironment(learningSetScan);
+//		learningSetGroundTruth->writeToFile("box learning ground truth");
+/*		learningSetScan->setMapping(3, 3, 0.5);
+		learningSetScan->setMapping(10, 3, 0.5);
+		learningSetScan->setMapping(3, 10, 0.5);
+		learningSetScan->setMapping(10, 10, 0.5);
+*/
+		learningSetScan->writeToFile("box learning scan");
+		occupancy_grid * learningBox = new occupancy_grid(learningSetScan, 2);
+		learningBox->learnParameters(learningSetGroundTruth);
 //		learningSetScan->printMap();
-		sandboxTest->loopyBeliefPropagation();
-		sandboxTest->getProcessedEnvironment()->writeToFile("afterlbp");
-		sandboxTest->getProcessedEnvironment()->printMap();
+		learningBox->loopyBeliefPropagation();
+		learningBox->getProcessedEnvironment()->writeToFile("afterlbp");
+//		learningBox->getProcessedEnvironment()->printMap();
 //		learningSetGroundTruth->printMap();
 //		learningSetScan->writeToFile("2beforelbp");
+
+		Environment * testingSetGroundTruth = new Environment(false);
+		Environment * testingSetScan = new Environment(false);
+		testingSetGroundTruth->readFromFile("box unfilled");
+		testingSetScan->readFromFile("box scan");
+		occupancy_grid * testingBox  = new occupancy_grid(testingSetScan, 2);
+		
+		cout << "grid before lbp mse = " << testingBox->getProcessedEnvironment()->calculateError(testingSetGroundTruth) << endl;
+	
+	
+		testingBox->loopyBeliefPropagation();
+		cout << "grid after lbp without learning mse = " << testingBox->getProcessedEnvironment()->calculateError(testingSetGroundTruth) << endl;
+		testingBox->getProcessedEnvironment()->writeToFile("box after lbp no learning");
+//		testingBox->validation(testingSetGroundTruth);
+		hiddenPotentials = learningBox->getHiddenPotentials();
+		hiddenPotentials[2] = 2;	
+//		testingBox->setHiddenPotentials(learningBox->getHiddenPotentials());	
+		testingBox->setHiddenPotentials(hiddenPotentials);	
+		testingBox->setLinkPotentials(learningBox->getLinkPotentials());	
+
+		testingBox->learnParameters(testingSetGroundTruth);
+		testingBox->loopyBeliefPropagation();
+		cout << "grid after lbp with learning mse = " << testingBox->getProcessedEnvironment()->calculateError(testingSetGroundTruth) << endl;
+		testingBox->getProcessedEnvironment()->writeToFile("box after lbp with learning");
+		testingBox->validation(testingSetGroundTruth);	
 		/*
 		modifyEnvironment(this->robot->getRobotEnvironment());
 		

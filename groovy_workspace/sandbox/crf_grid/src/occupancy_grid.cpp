@@ -123,6 +123,14 @@ void occupancy_grid::setHiddenPotentials(vector<float> potentials) {
 void occupancy_grid::setLinkPotentials(vector<float> potentials) {
 	this->linkPotentials = potentials;
 };
+
+vector<float> occupancy_grid::getHiddenPotentials() {
+	return this->hiddenPotentials;
+};
+
+vector<float> occupancy_grid::getLinkPotentials() {
+	return this->linkPotentials;
+};
 void occupancy_grid::incrementHiddenPotential(float jump) {
 	this->hiddenPotentials[0] += jump;
 	this->hiddenPotentials[1] += jump;
@@ -623,12 +631,15 @@ void occupancy_grid::validation(Environment * groundTruth) {
 		for (y = 0; y < this->externalEnvironment->getGridSizeVertical(); y++) {
 			trueOccupancy = this->externalEnvironment->getMapping(x, y);
 
-//			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
 
 			this->externalEnvironment->setMapping(x, y, 0.5);
 			this->loopyBeliefPropagation();
 			
 			inferredOccupancy = this->processedEnvironment->getMapping(x, y);	
+			//			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
+			if (x == 2 && y == 2) {
+				cout << "inferred = " << inferredOccupancy << "true occupancy = " << trueOccupancy << endl;	
+			}
 			this->externalEnvironment->setMapping(x, y, trueOccupancy);
 
 			if (inferredOccupancy > 0.5 && trueOccupancy > 0.5) {
