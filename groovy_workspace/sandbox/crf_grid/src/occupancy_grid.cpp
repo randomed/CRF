@@ -43,11 +43,13 @@ occupancy_grid::occupancy_grid(Environment * environment, int iterationCount) {
 
 	this->processedEnvironment = new Environment(environment);
 
-	this->linkPotentials.push_back(5); //occupied
-	this->linkPotentials.push_back(5); //non occupied
-
-	this->hiddenPotentials.push_back(5); //potential for occupied
-	this->hiddenPotentials.push_back(5); //potential for non occupied
+	this->hiddenPotentials.push_back(10); //occupied - occupied
+	this->hiddenPotentials.push_back(1); //occupied - non occupied
+	this->hiddenPotentials.push_back(1); //non occupied - occupied
+	this->hiddenPotentials.push_back(10); //non occupied - non occupied
+	
+	this->linkPotentials.push_back(1); //potential for occupied
+	this->linkPotentials.push_back(1); //potential for non occupied
 
 	/*
 	this->__processedMessages1 = new float *[gridSizeHorizontal];  
@@ -115,6 +117,26 @@ float occupancy_grid::normalise(float val1, float val2) {
 	return (1 / (val1 + val2)) * val1;
 };
 
+void occupancy_grid::setHiddenPotentials(vector<float> potentials) {
+	this->hiddenPotentials = potentials;
+};
+void occupancy_grid::setLinkPotentials(vector<float> potentials) {
+	this->linkPotentials = potentials;
+};
+
+vector<float> occupancy_grid::getHiddenPotentials() {
+	return this->hiddenPotentials;
+};
+
+vector<float> occupancy_grid::getLinkPotentials() {
+	return this->linkPotentials;
+};
+void occupancy_grid::incrementHiddenPotential(float jump) {
+	this->hiddenPotentials[0] += jump;
+	this->hiddenPotentials[1] += jump;
+
+//	this->linkPotentials[0] += jump; //temporary test to get ROC curves working
+};
 node * occupancy_grid::getNode(int x, int y) { //gets node in a 2d grid
 	vector<int> coordinates;
 	coordinates.push_back(x);
@@ -221,7 +243,7 @@ void occupancy_grid::loopyBeliefPropagation() {
 //	vector<vector<int>> neighbours;
 //	vector<vector<int>>::iterator currentNeighbour, processedIt;
 
-	ROS_INFO("starting LBP...");	
+//	ROS_INFO("starting LBP...");	
 //	int gridSizeHorizontal = this->externalEnvironment->getGridSizeHorizontal(), gridSizeVertical = this->externalEnvironment->getGridSizeVertical();	
 	//reset messages
 //	for(int i = 0; i < gridSizeHorizontal; i++) {
@@ -302,7 +324,7 @@ void occupancy_grid::loopyBeliefPropagation() {
 		//	updater->second->pushTempValue();
 		//}
 //		cout << "-----------" << endl;
-		this->processedEnvironment->printMap();
+//		this->processedEnvironment->printMap();
 		oss.str("");
 		oss << iteration + 3;
 		oss << "iteration" << iteration + 1;
@@ -380,7 +402,7 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 	int neighbourX, neighbourY, currentX = currentNode->getCoords()[0], currentY = currentNode->getCoords()[1];	
 	float occupancyBelief = 0;
 	vector<float> neighbourProduct = defaultVector;
-	
+	float marginalOccupied, marginalNonOccupied;
 	if (DEBUG) {
 		cout << "-- processing node : " << currentX << ", " << currentY << endl;
 	}
@@ -399,14 +421,15 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 				this->variableProduct(&neighbourProduct, currentnn->second);
 			}
 		}
-		//factor in current beliefs and hidden potential
-		occupancyBelief = this->processedEnvironment->getMapping(neighbourX, neighbourY);
-		beliefVector.clear();
-		beliefVector.push_back(occupancyBelief);
-		beliefVector.push_back(1 - occupancyBelief);
-		this->variableProduct(&neighbourProduct, beliefVector);
+		//factor in current observation and hidden potential
+//		occupancyBelief = this->processedEnvironment->getMapping(neighbourX, neighbourY);
+		occupancyBelief = this->externalEnvironment->getMapping(neighbourX, neighbourY);
+//		beliefVector.clear();
+//		beliefVector.push_back(occupancyBelief);
+//		beliefVector.push_back(1 - occupancyBelief);
+//		this->variableProduct(&neighbourProduct, beliefVector);
 		
-		this->variableProduct(&neighbourProduct, this->hiddenPotentials);
+//		this->variableProduct(&neighbourProduct, this->hiddenPotentials);
 
 		//factor in observations and link potential
 		occupancyBelief = this->externalEnvironment->getMapping(neighbourX, neighbourY);
@@ -416,12 +439,18 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 		this->variableProduct(&neighbourProduct, beliefVector);
 
 		this->variableProduct(&neighbourProduct, this->linkPotentials);
+		
+		//marginalise	
+		marginalOccupied = neighbourProduct[0];	
+		marginalNonOccupied = neighbourProduct[1];	
+		neighbourProduct[0] = this->hiddenPotentials[0] * marginalOccupied + this->hiddenPotentials[1] * marginalNonOccupied;
+		neighbourProduct[1] = this->hiddenPotentials[2] * marginalOccupied + this->hiddenPotentials[3] * marginalNonOccupied;
 		//update message from neighbour to current node
 		currentn->second = neighbourProduct;
 		if (DEBUG) {		
 			cout << neighbourX << ", " << neighbourY << " -> " 
 			<< currentX << ", " << currentY 
-			<< " : (normalised) " << this->normalise(neighbourProduct[0], neighbourProduct[1]) << endl;
+			<< " : (normalised) " << neighbourProduct[0] << " " <<  neighbourProduct[1] << endl;
 		}		
 		//add processed incoming message to belief update vector
 		this->variableSum(&beliefSum, neighbourProduct);
@@ -430,6 +459,7 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 		
 	//factor in current node's beliefs
 	occupancyBelief = this->processedEnvironment->getMapping(currentX, currentY);
+	occupancyBelief = this->externalEnvironment->getMapping(currentX, currentY);
 	if (DEBUG) {
 		cout << "current belief: " << occupancyBelief << endl;
 	}
@@ -437,7 +467,7 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 	beliefVector.push_back(occupancyBelief);
 	beliefVector.push_back(1 - occupancyBelief);
 	this->variableSum(&beliefSum, beliefVector);
-	this->variableProduct(&beliefProduct, beliefVector);
+//	this->variableProduct(&beliefProduct, beliefVector);
 
 	//factor in current node's observation and link potential
 	occupancyBelief = this->externalEnvironment->getMapping(currentX, currentY);
@@ -457,8 +487,8 @@ float occupancy_grid::calculateIncomingMessages(node * currentNode) {
 		//cout << "update " << currentX << ", " << currentY << " : " << beliefSum[0] << "\n" << endl;
 		cout << "update " << currentX << ", " << currentY << " : " << beliefProduct[0] << "\n" << endl;
 	}
-//	return beliefProduct[0];
-	return beliefSum[0];
+	return beliefProduct[0];
+//	return beliefSum[0];
 };
 
 void occupancy_grid::variableProduct(vector<float> * v1, vector<float> v2) {
@@ -512,5 +542,127 @@ void occupancy_grid::printGrid() {
 		}
 		cout << endl << endl;
 	}
+};
+
+void occupancy_grid::learnParameters(Environment * groundTruth) {
+	bool atMinimum = false;
+	float currentError = 1, newError = 0;
+	vector<float> linkPotentialJump; //vectors for the value and direction to shift each parameter
+	vector<float> hiddenPotentialJump; //vectors for the value and direction to shift each parameter
+	float jumpValue = 0.1; //how much each iteration will adjust the parameters by
+	unsigned int i;
+	
+	this->loopyBeliefPropagation();
+	currentError = this->processedEnvironment->calculateError(groundTruth); //initial error with default parameters
+
+	//determine which direction to jump in for each parameter
+	
+	//calculating link potentials
+	for (i = 0; i < this->linkPotentials.size(); i++) {
+		this->linkPotentials[i] += jumpValue;
+		this->loopyBeliefPropagation();
+		newError = this->processedEnvironment->calculateError(groundTruth);
+		if (newError < currentError) {
+			linkPotentialJump.push_back(jumpValue);
+		}
+		else {
+			linkPotentialJump.push_back(-jumpValue);
+		}
+		currentError = newError;
+	}
+	
+	//calculating hidden potentials
+	for (i = 0; i < this->hiddenPotentials.size(); i++) {
+		this->hiddenPotentials[i] += jumpValue;
+		this->loopyBeliefPropagation();
+		newError = this->processedEnvironment->calculateError(groundTruth);
+		if (newError < currentError) {
+			hiddenPotentialJump.push_back(jumpValue);
+		}
+		else {
+			hiddenPotentialJump.push_back(-jumpValue);
+		}
+		currentError = newError;
+	}
+
+	//gradient descent on a concave likelihood function
+	while (!atMinimum) {
+		atMinimum = true;
+		
+		//link potential tuning
+		for (i = 0; i < this->linkPotentials.size(); i++) {
+			this->linkPotentials[i] += linkPotentialJump[i];
+			this->loopyBeliefPropagation();
+			newError = this->processedEnvironment->calculateError(groundTruth); 
+			if (newError < currentError) {
+				currentError = newError;
+				atMinimum = false;
+			}
+			else {
+				this->linkPotentials[i] -= linkPotentialJump[i];
+			}
+		}
+		
+		//hidden potential tuning
+		for (i = 0; i < this->hiddenPotentials.size(); i++) {
+			this->hiddenPotentials[i] += hiddenPotentialJump[i];
+			this->loopyBeliefPropagation();
+			newError = this->processedEnvironment->calculateError(groundTruth); 
+			if (newError < currentError) {
+				currentError = newError;
+				atMinimum = false;
+			}
+			else {
+				this->hiddenPotentials[i] -= hiddenPotentialJump[i];
+			}
+		}
+
+	}
+
+	cout << "occupied link potential = " << this->linkPotentials[0] << " empty link potential = " << this->linkPotentials[1] << " o-o = " << this->hiddenPotentials[0] << " o-e = " << this->hiddenPotentials[1] << " e-o =" << this->hiddenPotentials[2] << " e-e = " << this->hiddenPotentials[3] <<  " mse = " << currentError << endl;
+};
+
+
+void occupancy_grid::validation(Environment * groundTruth) {
+	int x, y, truePositives = 0, trueNegatives = 0, falsePositives = 0, falseNegatives = 0;
+	float trueOccupancy = 0.5, inferredOccupancy = 0.5;
+	//loop through every cell and set it as unknown and then perform lbp
+	for (x = 0; x < this->externalEnvironment->getGridSizeHorizontal(); x++) {
+		for (y = 0; y < this->externalEnvironment->getGridSizeVertical(); y++) {
+			trueOccupancy = this->externalEnvironment->getMapping(x, y);
+
+
+			this->externalEnvironment->setMapping(x, y, 0.5);
+			this->loopyBeliefPropagation();
+			
+			inferredOccupancy = this->processedEnvironment->getMapping(x, y);	
+			//			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
+			if (x == 2 && y == 2) {
+				cout << "inferred = " << inferredOccupancy << "true occupancy = " << trueOccupancy << endl;	
+			}
+			this->externalEnvironment->setMapping(x, y, trueOccupancy);
+
+			if (inferredOccupancy > 0.5 && trueOccupancy > 0.5) {
+				//true positive for occupied classification
+				truePositives++;
+			}
+			else if (inferredOccupancy < 0.5 && trueOccupancy < 0.5) {
+				//true negative for occupied classification
+				trueNegatives++;
+			}
+			else if (inferredOccupancy < 0.5 && trueOccupancy > 0.5) {
+				//false negative for occupied classification
+				falseNegatives++;
+			}
+			else if (inferredOccupancy > 0.5 && trueOccupancy < 0.5) {
+				//false positive for occupied classification
+				falsePositives++;
+			}
+		}
+	}
+	
+	cout << "truePositives = " << truePositives << " - trueNegatives = " << trueNegatives
+	<< " - falsePositives = " << falsePositives << " - falseNegatives = " << falseNegatives << endl;
+
 };
 #endif

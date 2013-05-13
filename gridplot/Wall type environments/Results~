@@ -1,0 +1,17 @@
+grid before lbp mse = 0.06445
+grid after lbp without learning mse = 0.0553052
+
+truePositives = 2 - trueNegatives = 77 - falsePositives = 0 - falseNegatives = 4
+
+with learning from similar environment
+occupied link potential = 1.1 empty link potential = 1.1 o-o = 7.89999 o-e = 2.4 e-o =-0.8 = 0 e-e = 12.3 
+
+grid after lbp with learning mse = 0.0494696
+
+probabilities must be positive
+
+
+
+
+
+

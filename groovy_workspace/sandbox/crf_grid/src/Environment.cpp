@@ -11,8 +11,8 @@ float negativeInverseExponential(float x) {
 };
 
 Environment::Environment() {
-	this->gridSizeHorizontal = 100;
-	this->gridSizeVertical = 100;
+	this->gridSizeHorizontal = 14;
+	this->gridSizeVertical = 14;
 	this->robotCoords = make_pair(0, 0);	
 	this->generateTestMap();
 	this->occupancyValueThreshold = 0.3;
@@ -22,13 +22,13 @@ Environment::Environment(Environment *env) {
 	this->gridSizeHorizontal = env->gridSizeHorizontal;
 	this->gridSizeVertical = env->gridSizeVertical;
 	this->robotCoords = env->robotCoords;
-	this->generateUnknownMap();
+	this->mapping = env->getMap();
 	this->occupancyValueThreshold = 0.3;
 };
 
 Environment::Environment(bool unknownMap) {
-	this->gridSizeHorizontal = 5;
-	this->gridSizeVertical = 5;
+	this->gridSizeHorizontal = 14;
+	this->gridSizeVertical = 14;
 	this->robotCoords = make_pair(0, 0);	
 	this->occupancyValueThreshold = 0.3;
 	if (unknownMap) {
@@ -89,11 +89,30 @@ void Environment::generateTestMap() {
 	//this->setMapping(2, 6, 1);
 	//addHashedMapping(2, 6);
 	
+	//testing set for hardcoded wall
+	/*
+	this->setMapping(1, 8, 1);
+	addHashedMapping(1, 8);
+	this->setMapping(2, 8, 1);
+	addHashedMapping(2, 8);
+	this->setMapping(3, 8, 1);
+	addHashedMapping(3, 8);	
+	this->setMapping(4, 8, 1);
+	addHashedMapping(4, 8);
+	this->setMapping(5, 8, 1);
+	addHashedMapping(5, 8);	
+	this->setMapping(6, 9, 1);
+	addHashedMapping(6, 9);	
+	this->setMapping(7, 8, 1);
+	addHashedMapping(7, 8);	
+	this->setMapping(8, 9, 1);
+	addHashedMapping(8, 9);
+	*/
 //	srand(time(NULL));
 	srand(2);
 	
 	//populate randomly
-	
+/*	
 	int randomx, randomy;
 	y = 0;
 	x = 0;
@@ -111,6 +130,7 @@ void Environment::generateTestMap() {
 			}
 		}
 	}	
+*/
 };
 
 void Environment::generateUnknownMap() {
@@ -191,7 +211,7 @@ void Environment::writeToFile(string fileName) {
 //	myFile << "];";
 	myFile.close();
 
-	cout << "wrote map to file: " << fullPath << endl;
+//	cout << "wrote map to file: " << fullPath << endl;
 };
 
 void Environment::readFromFile(string fileName) {
@@ -208,12 +228,23 @@ void Environment::readFromFile(string fileName) {
 			for (x = 0; x < pixels.size(); x++) {
 //				cout << pixels[x];
 				this->setMapping(x, y, atof(pixels[x].c_str()));
-				cout <<  atof(pixels[x].c_str());
+//				cout <<  atof(pixels[x].c_str());
 			}
 		}
 	}
-	this->gridSizeHorizontal = rows.size();;
-	this->gridSizeVertical = rows.size();
+	this->gridSizeHorizontal = rows.size() - 1;
+	this->gridSizeVertical = rows.size() - 1;
 };
 
+float Environment::calculateError(Environment * env) {
+	int x, y;
+	float errorTotal = 0; 
+	for (x = 0; x < this->gridSizeHorizontal; x++) {
+		for (y = 0; y < this->gridSizeVertical; y++) {
+			errorTotal += pow(env->getMapping(x, y) - this->getMapping(x, y), 2);
+		}
+	}
+	
+	return errorTotal / (this->gridSizeHorizontal * this->gridSizeVertical);
+};
 #endif

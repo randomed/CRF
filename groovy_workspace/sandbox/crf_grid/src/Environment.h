@@ -78,5 +78,6 @@ public:
 //	void clearHashedMapping2() {this->hashedMapping2.clear();};
 	void writeToFile(string fileName); //dump occupancy grid to file
 	void readFromFile(string fileName); //read from occupancy grid dump
+	float calculateError(Environment * env); //mean squared error
 };
 
