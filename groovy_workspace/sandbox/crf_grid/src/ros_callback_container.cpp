@@ -102,33 +102,26 @@ public:
 		//learn parameters after at least one laser scan
 		if (learnOnce) {
 //			this->gridOperations->learnParameters(this->groundTruth);
-/*
+
 			linkPotentials[0] = 1.1;
-			linkPotentials[1] = 1.1;
+			linkPotentials[1] = 1.3;
 			this->gridOperations->setLinkPotentials(linkPotentials);
 
-			hiddenPotentials[0] = 7.8999;
-			hiddenPotentials[1] = 2.4;
-			hiddenPotentials[2] = 0;
-			hiddenPotentials[3] = 12.3;
+			hiddenPotentials[0] = 10.3;
+			hiddenPotentials[1] = 1.3;
+			hiddenPotentials[2] = 0.9;
+			hiddenPotentials[3] = 10.2;
 			this->gridOperations->setHiddenPotentials(hiddenPotentials);
 
 			this->learnOnce = false;
-*/
+
 		}
-		
+		/*
 		Environment * learningSetGroundTruth = new Environment(false);
 		Environment * learningSetScan = new Environment(false);
 		learningSetGroundTruth->readFromFile("box unfilled learning ground truth");
 		learningSetScan->readFromFile("box learning scan");
-//		modifyEnvironment(learningSetGroundTruth);
-//		modifyEnvironment(learningSetScan);
-//		learningSetGroundTruth->writeToFile("box learning ground truth");
-/*		learningSetScan->setMapping(3, 3, 0.5);
-		learningSetScan->setMapping(10, 3, 0.5);
-		learningSetScan->setMapping(3, 10, 0.5);
-		learningSetScan->setMapping(10, 10, 0.5);
-*/
+
 		learningSetScan->writeToFile("box learning scan");
 		occupancy_grid * learningBox = new occupancy_grid(learningSetScan, 2);
 		learningBox->learnParameters(learningSetGroundTruth);
@@ -163,21 +156,21 @@ public:
 		cout << "grid after lbp with learning mse = " << testingBox->getProcessedEnvironment()->calculateError(testingSetGroundTruth) << endl;
 		testingBox->getProcessedEnvironment()->writeToFile("box after lbp with learning");
 		testingBox->validation(testingSetGroundTruth);	
-		/*
-		modifyEnvironment(this->robot->getRobotEnvironment());
+		*/
+		
 		
 		this->robot->getRobotEnvironment()->writeToFile("2beforelbp");
 		cout << "grid before lbp mse = " << this->robot->getRobotEnvironment()->calculateError(this->groundTruth) << endl;
-		this->robot->getRobotEnvironment()->printMap();
+//		this->robot->getRobotEnvironment()->printMap();
 
 		this->gridOperations->loopyBeliefPropagation();
 		
 //		cout << "grid after lbp no learning mse = " << this->gridOperations->getProcessedEnvironment()->calculateError(this->groundTruth) << endl;
 		cout << "grid after lbp with learning mse = " << this->gridOperations->getProcessedEnvironment()->calculateError(this->groundTruth) << endl;
-		this->gridOperations->getProcessedEnvironment()->printMap();		
+//		this->gridOperations->getProcessedEnvironment()->printMap();		
 		this->gridOperations->getProcessedEnvironment()->writeToFile("afterlbp");
-//		this->gridOperations->validation(this->groundTruth);
-		*/
+		this->gridOperations->validation(this->groundTruth);
+		
 //		this->gridOperations->incrementHiddenPotential(-100);
 		/*
 		potentials[2] = 100;	

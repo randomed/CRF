@@ -11,8 +11,8 @@ float negativeInverseExponential(float x) {
 };
 
 Environment::Environment() {
-	this->gridSizeHorizontal = 14;
-	this->gridSizeVertical = 14;
+	this->gridSizeHorizontal = 20;
+	this->gridSizeVertical = 20;
 	this->robotCoords = make_pair(0, 0);	
 	this->generateTestMap();
 	this->occupancyValueThreshold = 0.3;
@@ -27,8 +27,8 @@ Environment::Environment(Environment *env) {
 };
 
 Environment::Environment(bool unknownMap) {
-	this->gridSizeHorizontal = 14;
-	this->gridSizeVertical = 14;
+	this->gridSizeHorizontal = 20;
+	this->gridSizeVertical = 20;
 	this->robotCoords = make_pair(0, 0);	
 	this->occupancyValueThreshold = 0.3;
 	if (unknownMap) {
@@ -74,40 +74,64 @@ void Environment::generateTestMap() {
 	//		addHashedMapping(x, y);
 	//	}
 	//}	
+	
 
-//	this->setMapping(2, 1, 1);
-//	addHashedMapping(2, 1);
-//	this->setMapping(2, 2, 1);
-//	addHashedMapping(2, 2);
 
-	this->setMapping(2, 3, 1);
-	addHashedMapping(2, 3);
-	this->setMapping(2, 4, 1);
-	addHashedMapping(2, 4);
-	//this->setMapping(2, 5, 1);
-	//addHashedMapping(2, 5);
-	//this->setMapping(2, 6, 1);
-	//addHashedMapping(2, 6);
 	
 	//testing set for hardcoded wall
-	/*
-	this->setMapping(1, 8, 1);
-	addHashedMapping(1, 8);
-	this->setMapping(2, 8, 1);
-	addHashedMapping(2, 8);
-	this->setMapping(3, 8, 1);
-	addHashedMapping(3, 8);	
-	this->setMapping(4, 8, 1);
-	addHashedMapping(4, 8);
-	this->setMapping(5, 8, 1);
-	addHashedMapping(5, 8);	
-	this->setMapping(6, 9, 1);
-	addHashedMapping(6, 9);	
-	this->setMapping(7, 8, 1);
-	addHashedMapping(7, 8);	
-	this->setMapping(8, 9, 1);
-	addHashedMapping(8, 9);
-	*/
+	//foreground
+	
+//	this->setMapping(2, 10, 1);
+//	addHashedMapping(2, 10);
+	
+	
+	this->setMapping(4, 7, 1);
+	addHashedMapping(4, 7);
+	this->setMapping(5, 7, 1);
+	addHashedMapping(5, 7);
+
+	this->setMapping(10, 10, 1);
+	addHashedMapping(10, 10);
+	this->setMapping(13, 3, 1);
+	addHashedMapping(13, 3);
+	this->setMapping(14, 3, 1);
+	addHashedMapping(14, 3);
+	this->setMapping(13, 4, 1);
+	addHashedMapping(13, 4);
+	this->setMapping(14, 4, 1);
+	addHashedMapping(14, 4);
+	
+
+	this->setMapping(1, 15, 1);
+	addHashedMapping(1, 15);
+	this->setMapping(2, 15, 1);
+	addHashedMapping(2, 15);
+	this->setMapping(3, 15, 1);
+	addHashedMapping(3, 15);	
+	this->setMapping(4, 15, 1);
+	addHashedMapping(4, 15);
+	this->setMapping(5, 15, 1);
+	addHashedMapping(5, 15);	
+	this->setMapping(6, 15, 1);
+	addHashedMapping(6, 15);	
+	this->setMapping(7, 15, 1);
+	addHashedMapping(7, 15);	
+	
+	//foreground	
+//	this->setMapping(9, 2, 1);
+//	addHashedMapping(9, 2);
+//	this->setMapping(10, 2, 1);
+//	addHashedMapping(10, 2);
+//	this->setMapping(9, 3, 1);
+//	addHashedMapping(9, 3);
+	
+
+	for (x = 17; x < 19; x++) {
+		for (y = 0; y < 19; y++) {
+			this->setMapping(x, y, 1);
+			addHashedMapping(x, y); 
+		}
+	}
 //	srand(time(NULL));
 	srand(2);
 	
@@ -227,6 +251,7 @@ void Environment::readFromFile(string fileName) {
 			boost::split(pixels, rows[y], boost::is_any_of(","));
 			for (x = 0; x < pixels.size(); x++) {
 //				cout << pixels[x];
+				this->addHashedMapping(x, y);
 				this->setMapping(x, y, atof(pixels[x].c_str()));
 //				cout <<  atof(pixels[x].c_str());
 			}

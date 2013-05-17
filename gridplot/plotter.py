@@ -81,11 +81,21 @@ def drawBoxEnvironment(fileName):
 #	print outputString
 	f.write(outputString)
 	f.close()
+
+def drawWallEnvironment(fileName):
+	#define default environment
+	grid = []
+	gridSize = 25
+	for y in range(gridSize):
+		row = []
+		for x in range(gridSize):
+			row += [0.0] #default value of cells
+		grid.append(row)
 if __name__ == "__main__":
 #	fileName = 'test1'
 #	fileArray = readFromFile(fileName)
 #	print fileArray
-
-	drawBoxEnvironment("__boxscan")
+	drawWallEnvironment("__wall_ground_truth")
+#	drawBoxEnvironment("__boxscan")
 	batchWrite()
 #	writeToPNG(fileName, fileArray)

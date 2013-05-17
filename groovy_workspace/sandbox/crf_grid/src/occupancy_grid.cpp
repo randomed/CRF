@@ -637,9 +637,6 @@ void occupancy_grid::validation(Environment * groundTruth) {
 			
 			inferredOccupancy = this->processedEnvironment->getMapping(x, y);	
 			//			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
-			if (x == 2 && y == 2) {
-				cout << "inferred = " << inferredOccupancy << "true occupancy = " << trueOccupancy << endl;	
-			}
 			this->externalEnvironment->setMapping(x, y, trueOccupancy);
 
 			if (inferredOccupancy > 0.5 && trueOccupancy > 0.5) {
