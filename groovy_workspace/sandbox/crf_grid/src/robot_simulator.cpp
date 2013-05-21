@@ -62,7 +62,6 @@ void publishEnvironmentThread(Environment * env) {
 		gridCellsMessage.cells = points;
 
 		chatter_pub.publish(gridCellsMessage);
-		rmcl_getMap();	
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
@@ -184,16 +183,20 @@ void odometryThread(Robot * robot, Environment * env) {
 void rmcl_getMap() {//move this to grid_processor later
 	
 	ros::NodeHandle n;
-	ros::ServiceClient map_service_client_ = n.serviceClient<nav_msgs::GetMap>("dynamic_map");
+//	ros::ServiceClient map_service_client_ = n.serviceClient<nav_msgs::GetMap>("dynamic_map");
 	nav_msgs::GetMap srv_map;
 	vector<signed char>::iterator mapIt;
-	if (map_service_client_.call(srv_map)) {
+//	if (map_service_client_.call(srv_map)) {
+	if (ros::service::call("dynamic_map", srv_map)) {
 		  ROS_INFO("Map service called successfully");
 		nav_msgs::OccupancyGrid map (srv_map.response.map);
 		int i = 0;
 		vector<signed char>::iterator mapIt = map.data.begin();
+		Environment * env = new Environment();
 		for (mapIt = map.data.begin(); mapIt != map.data.end(); mapIt ++) {
+			
 			i++;
+			/*
 //		for (i = 0; i < 10000; i++) {
 
 //			convertedChar = atof((char ) map.data[i]);
@@ -205,14 +208,26 @@ void rmcl_getMap() {//move this to grid_processor later
 				cout << i % 4000 << ", " << floor(i / 4000) << " = " << (float) *mapIt << endl;	
 //				printf("%f\n", (float) *mapIt);
 			}
-
+			*/
+			if (i % 4000 > 1400 && i % 4000 < 2400 && floor(i / 4000) > 1700 && floor(i / 4000) < 2700) {
+				if ((float ) *mapIt == -1) {
+					env->setMapping((i % 4000) - 1400, floor(i / 4000) - 1700, 0.5);
+				}
+				else {
+					env->setMapping((i % 4000) - 1400, floor(i / 4000) - 1700, (float) *mapIt);
+				}
+			}
 		}
+		env->writeToFile("office");	
+		ROS_INFO("done creating environment");
+		
 	}
 	else
 	{
-		  ROS_ERROR("Failed to call map service");
-			 return;
+		  ROS_ERROR("Failed to call map service for getMap");
+//			 return;
 	}
+//	return;
 };
 
 void twistThread(Robot * robot) {
@@ -232,7 +247,7 @@ int main(int argc, char **argv)
 	boost::thread t_robotPosition(publishRobotPosition, env);
 	boost::thread t_odometry(odometryThread, robot, env);
 	boost::thread t_twist(twistThread, robot);
-//	boost::thread t_rmclMap(rmcl_getMap);
+	boost::thread t_rmclMap(rmcl_getMap);
 //	Environment robotEnv;
 	
 //	publishEnvironmentTopic(env, GRIDCELLTOPIC);

@@ -11,8 +11,8 @@ float negativeInverseExponential(float x) {
 };
 
 Environment::Environment() {
-	this->gridSizeHorizontal = 20;
-	this->gridSizeVertical = 20;
+	this->gridSizeHorizontal = 1000;
+	this->gridSizeVertical = 1000;
 	this->robotCoords = make_pair(0, 0);	
 	this->generateTestMap();
 	this->occupancyValueThreshold = 0.3;
