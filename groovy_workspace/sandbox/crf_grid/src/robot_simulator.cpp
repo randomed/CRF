@@ -209,16 +209,16 @@ void rmcl_getMap() {//move this to grid_processor later
 //				printf("%f\n", (float) *mapIt);
 			}
 			*/
-			if (i % 4000 > 1400 && i % 4000 < 2400 && floor(i / 4000) > 1700 && floor(i / 4000) < 2700) {
+			if (i % 4000 > 1800 && i % 4000 < 2000 && floor(i / 4000) > 2000 && floor(i / 4000) < 2200) {
 				if ((float ) *mapIt == -1) {
-					env->setMapping((i % 4000) - 1400, floor(i / 4000) - 1700, 0.5);
+					env->setMapping((i % 4000) - 1800, floor(i / 4000) - 2000, 0.5);
 				}
 				else {
-					env->setMapping((i % 4000) - 1400, floor(i / 4000) - 1700, (float) *mapIt);
+					env->setMapping((i % 4000) - 1800, floor(i / 4000) - 2000, (float) *mapIt);
 				}
 			}
 		}
-		env->writeToFile("office");	
+		env->writeToFile("partial_office");	
 		ROS_INFO("done creating environment");
 		
 	}
@@ -247,7 +247,7 @@ int main(int argc, char **argv)
 	boost::thread t_robotPosition(publishRobotPosition, env);
 	boost::thread t_odometry(odometryThread, robot, env);
 	boost::thread t_twist(twistThread, robot);
-	boost::thread t_rmclMap(rmcl_getMap);
+//	boost::thread t_rmclMap(rmcl_getMap);
 //	Environment robotEnv;
 	
 //	publishEnvironmentTopic(env, GRIDCELLTOPIC);

@@ -74,3 +74,8 @@ bool node::setValue(float value) {
 int node::getVariablesTracked() {
 	return this->variablesTracked;
 };
+
+
+std::vector<int> node::getCoordinates() {
+	return this->coordinates;
+};

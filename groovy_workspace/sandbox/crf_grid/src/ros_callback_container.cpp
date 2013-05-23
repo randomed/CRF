@@ -102,7 +102,7 @@ public:
 		//learn parameters after at least one laser scan
 		if (learnOnce) {
 //			this->gridOperations->learnParameters(this->groundTruth);
-
+			/*
 			linkPotentials[0] = 1.1;
 			linkPotentials[1] = 1.3;
 			this->gridOperations->setLinkPotentials(linkPotentials);
@@ -114,7 +114,7 @@ public:
 			this->gridOperations->setHiddenPotentials(hiddenPotentials);
 
 			this->learnOnce = false;
-
+			*/
 		}
 		/*
 		Environment * learningSetGroundTruth = new Environment(false);
@@ -155,10 +155,10 @@ public:
 		testingBox->loopyBeliefPropagation();
 		cout << "grid after lbp with learning mse = " << testingBox->getProcessedEnvironment()->calculateError(testingSetGroundTruth) << endl;
 		testingBox->getProcessedEnvironment()->writeToFile("box after lbp with learning");
-		testingBox->validation(testingSetGroundTruth);	
+		testingBox->validation(testingSetGroundTrut/h);	
 		*/
 		
-		
+		/*	
 		this->robot->getRobotEnvironment()->writeToFile("2beforelbp");
 		cout << "grid before lbp mse = " << this->robot->getRobotEnvironment()->calculateError(this->groundTruth) << endl;
 //		this->robot->getRobotEnvironment()->printMap();
@@ -172,6 +172,7 @@ public:
 		this->gridOperations->validation(this->groundTruth);
 		
 //		this->gridOperations->incrementHiddenPotential(-100);
+		*/
 		/*
 		potentials[2] = 100;	
 		for (sensitivityCounter = 0; sensitivityCounter < 10; sensitivityCounter ++) {
@@ -223,5 +224,16 @@ public:
 //		cout << "------------" << endl;
 //		this->robot->getRobotEnvironment()->printMap();
 //		tester->validation(groundTruth);
+
+		//real life environment
+		Environment * real = new Environment(false);
+		real->readFromFile("partial_office");
+		occupancy_grid * officeMap = new occupancy_grid(real, 2);
+		officeMap->loopyBeliefPropagation();
+		officeMap->getProcessedEnvironment()->writeToFile("real_after_lbp");
+//		officeMap->validation(real);
+		ROS_INFO("done lbp");
+		
+		
 	};
 };

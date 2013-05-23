@@ -31,7 +31,12 @@ public:
 	void printMap();
 
 	void setMapping(int x, int y, float probability) {
-		this->mapping[make_pair(x, y)] = probability;
+		if (probability > 1) {
+			this->mapping[make_pair(x, y)] = 1;
+		}
+		else {
+			this->mapping[make_pair(x, y)] = probability;
+		}
 	};
 
 	unordered_set<string> getHashedMapping() {return this->hashedMapping;};

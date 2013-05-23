@@ -23,6 +23,7 @@ public:
 	bool pushTempValue(); //Overwrites nodeValue using __LBPTEMPVALUE at the end of iteration
 	void setFixedValue(float value);
 	int getVariablesTracked();
+	std::vector<int> getCoordinates();
 };
 
 	

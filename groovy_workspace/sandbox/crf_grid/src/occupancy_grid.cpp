@@ -331,6 +331,70 @@ void occupancy_grid::loopyBeliefPropagation() {
 		this->processedEnvironment->writeToFile(oss.str());
 	}
 };
+
+//LBP within bounds of x, y for larger grids
+void occupancy_grid::loopyBeliefPropagation(int x, int y) {
+	int iteration;
+	float factorNodeMessage;//, currentNodeValue;	
+	float lbpBound = 10; //don't process cells more then 10 units away from x, y
+	node * currentNode;
+	vector<node *> processed;
+	std::vector<node*>::iterator processedIt;
+	queue<node *> unprocessed;
+	std::map<node *, vector<float>>::iterator currentNeighbour;
+	std::map<node *, vector<float>> neighbours;
+	std::ostringstream oss;
+	int currentNodeX, currentNodeY;
+	this->processedEnvironment->generateUnknownMap();
+	vector<int> root;
+
+	//set node (0, 0) as root
+//	unprocessed.push(this->getNode(vector<int>(2, 0)));
+//	processed.push_back(this->getNode(vector<int>(2, 0)));
+	//set node (x, y) as root
+	root.push_back(x);	
+	root.push_back(y);	
+	unprocessed.push(this->getNode(root));
+	processed.push_back(this->getNode(root));
+
+	for (iteration = 0; iteration < this->iterationCount; iteration ++) {
+		while (!unprocessed.empty()) {
+			//breadth first traversal order of grid
+			currentNode = unprocessed.front();
+			unprocessed.pop();
+
+			//incoming messages are the sum-product of the neighbouring nodes, unless the cell is out of bounds
+//			currentNodeX = currentNode->getCoordinates()[0];
+//			currentNodeY = currentNode->getCoordinates()[1];
+//			factorNodeMessage = this->externalEnvironment->getMapping(currentNodeX, currentNodeY);
+//			if (abs(currentNodeX- x) < lbpBound && abs(currentNodeY - y) < lbpBound)	{
+				factorNodeMessage = this->calculateIncomingMessages(currentNode);
+//			}
+			currentNode->setValue(factorNodeMessage);
+
+			this->processedEnvironment->setMapping(currentNode->getCoords()[0], currentNode->getCoords()[1], factorNodeMessage);
+
+			neighbours = currentNode->getNeighbours();
+			
+			for (currentNeighbour = neighbours.begin(); currentNeighbour != neighbours.end(); currentNeighbour ++) { //loop through all neighbours
+				processedIt = std::find(processed.begin(), processed.end(), currentNeighbour->first);
+				
+				if (processedIt == processed.end()) {
+
+					if (abs(currentNeighbour->second[0] - x) < lbpBound && abs(currentNeighbour->second[1] - y) < lbpBound)	{
+						unprocessed.push(currentNeighbour->first);
+						processed.push_back(currentNeighbour->first);
+					}
+				}
+			}				
+		}
+		//last node processed becomes the first node in the new iteration
+		unprocessed.push(currentNode);
+		processed.clear();
+		processed.push_back(currentNode);
+	}
+};
+
 /*
 float occupancy_grid::calculateIncomingMessages(vector<int> currentNode) {
 	vector<vector<int>>::iterator currentNeighbour;
@@ -633,10 +697,13 @@ void occupancy_grid::validation(Environment * groundTruth) {
 
 
 			this->externalEnvironment->setMapping(x, y, 0.5);
-			this->loopyBeliefPropagation();
+			if (trueOccupancy != 0.5) {
+//				this->loopyBeliefPropagation();
+				this->loopyBeliefPropagation(x, y);
+			}
 			
 			inferredOccupancy = this->processedEnvironment->getMapping(x, y);	
-			//			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
+			cout << "testing: " << x << ", " << y << " - " << trueOccupancy << endl;
 			this->externalEnvironment->setMapping(x, y, trueOccupancy);
 
 			if (inferredOccupancy > 0.5 && trueOccupancy > 0.5) {

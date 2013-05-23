@@ -34,6 +34,7 @@ public:
 	occupancy_grid(Environment * environment, int iterationCount);
 	void constructGrid(); //contructs or reconstructs the grid according the number of dimensions passed	
 	void loopyBeliefPropagation(); //performs LBP
+	void loopyBeliefPropagation(int x, int y); //performs LBP, with restricted bounds
 	void printGrid(); //used for debugging in a 2d grid, prints out the grid on command line
 	node * getNode(int x, int y); //gets node in a 2d grid
 	node * getNode(vector<int> coordinates);
