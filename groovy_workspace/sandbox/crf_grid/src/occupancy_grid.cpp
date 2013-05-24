@@ -729,4 +729,72 @@ void occupancy_grid::validation(Environment * groundTruth) {
 	<< " - falsePositives = " << falsePositives << " - falseNegatives = " << falseNegatives << endl;
 
 };
+
+void occupancy_grid::generateROC(Environment * groundTruth) {
+	int x, y;
+	float trueOccupancy = 0.5, inferredOccupancy = 0.5;
+	float occupiedThreshold = 0;
+	float thresholdJump = 0.05;
+	vector<vector<float>> plotPoints;
+	vector<vector<float>>::iterator point;
+	vector<float> defaultVector = vector<float>(5, 0);
+	//construct default plot points
+	for (occupiedThreshold = 0; occupiedThreshold < 1; occupiedThreshold += thresholdJump) {
+		defaultVector[0] = occupiedThreshold;
+		plotPoints.push_back(defaultVector);
+	}
+	//loop through every cell and set it as unknown and then perform lbp
+	for (x = 0; x < this->externalEnvironment->getGridSizeHorizontal(); x++) {
+		for (y = 0; y < this->externalEnvironment->getGridSizeVertical(); y++) {
+			trueOccupancy = this->externalEnvironment->getMapping(x, y);
+
+
+			this->externalEnvironment->setMapping(x, y, 0.5);
+			if (trueOccupancy != 0.5) {
+//				this->loopyBeliefPropagation();
+				this->loopyBeliefPropagation(x, y);
+			}
+			
+			inferredOccupancy = this->processedEnvironment->getMapping(x, y);	
+//			cout << "testing: " << x << ", " << y << " - " << inferredOccupancy << endl;
+			this->externalEnvironment->setMapping(x, y, trueOccupancy);
+			
+			for (occupiedThreshold = 0, point = plotPoints.begin(); occupiedThreshold < 1; occupiedThreshold += thresholdJump, point++) {
+				if (inferredOccupancy > occupiedThreshold && trueOccupancy > occupiedThreshold) {
+					//true positive for occupied classification
+//					truePositives++;
+					(*point)[1]++;
+				}
+				else if (inferredOccupancy < occupiedThreshold && trueOccupancy < occupiedThreshold) {
+					//true negative for occupied classification
+//					trueNegatives++;
+
+					(*point)[2]++;
+				}
+				else if (inferredOccupancy < occupiedThreshold && trueOccupancy > occupiedThreshold) {
+					//false negative for occupied classification
+//					falseNegatives++;
+					(*point)[3]++;
+				}
+				else if (inferredOccupancy > occupiedThreshold && trueOccupancy < occupiedThreshold) {
+					//false positive for occupied classification
+//					falsePositives++;
+					(*point)[4]++;
+				}
+			}
+		}
+	}
+	
+	for (point = plotPoints.begin(); point != plotPoints.end(); point++) {
+//		cout << "truePositives = " << (*point)[1] << " - trueNegatives = " << (*point)[2]
+//		<< " - falsePositives = " << (*point)[3] << " - falseNegatives = " << (*point)[4] << endl;
+		cout << "tpr = " << (*point)[1] / ((*point)[1] + (*point)[3]) << " fpr = " << (*point)[4] / ((*point)[4] + (*point)[2]) << endl; 
+
+	}
+	cout << "------------\n";
+//	cout << "truePositives = " << truePositives << " - trueNegatives = " << trueNegatives
+//	<< " - falsePositives = " << falsePositives << " - falseNegatives = " << falseNegatives << endl;
+
+
+}
 #endif

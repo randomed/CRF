@@ -40,7 +40,8 @@ public:
 	node * getNode(vector<int> coordinates);
 	void setIterationCount(int iterationCount);
 	Environment * getProcessedEnvironment();
-	void validation(Environment * groundTruth); //cross validation
+	void validation(Environment * groundTruth); //leave one out cross validation
+	void generateROC(Environment * groundTruth); //generates numbers for a ROC Curve
 	void learnParameters(Environment * groundTruth); //gradient descent of mean square error to learn pairwise potentials
 	void incrementHiddenPotential(float jump);
 	void setHiddenPotentials(vector<float> potentials);

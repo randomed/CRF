@@ -232,6 +232,7 @@ public:
 		officeMap->loopyBeliefPropagation();
 		officeMap->getProcessedEnvironment()->writeToFile("real_after_lbp");
 //		officeMap->validation(real);
+		officeMap->generateROC(real);
 		ROS_INFO("done lbp");
 		
 		
