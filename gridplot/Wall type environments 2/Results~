@@ -1,4 +1,8 @@
 grid before lbp mse = 0.120607
 grid after lbp without learning mse = 0.0767262
-^CtruePositives = 13 - trueNegatives = 221 - falsePositives = 0 - falseNegatives = 6
+truePositives = 13 - trueNegatives = 221 - falsePositives = 0 - falseNegatives = 6
+
+
+grid after lbp with learning mse = 0.0636876
+truePositives = 13 - trueNegatives = 225 - falsePositives = 0 - falseNegatives = 11
 

@@ -751,11 +751,12 @@ void occupancy_grid::generateROC(Environment * groundTruth) {
 
 			this->externalEnvironment->setMapping(x, y, 0.5);
 			if (trueOccupancy != 0.5) {
-//				this->loopyBeliefPropagation();
-				this->loopyBeliefPropagation(x, y);
+				this->loopyBeliefPropagation();
+//				this->loopyBeliefPropagation(x, y); //lbp with restricted boundaries
 			}
 			
 			inferredOccupancy = this->processedEnvironment->getMapping(x, y);	
+//			inferredOccupancy = this->externalEnvironment->getMapping(x, y);
 //			cout << "testing: " << x << ", " << y << " - " << inferredOccupancy << endl;
 			this->externalEnvironment->setMapping(x, y, trueOccupancy);
 			
@@ -768,7 +769,6 @@ void occupancy_grid::generateROC(Environment * groundTruth) {
 				else if (inferredOccupancy < occupiedThreshold && trueOccupancy < occupiedThreshold) {
 					//true negative for occupied classification
 //					trueNegatives++;
-
 					(*point)[2]++;
 				}
 				else if (inferredOccupancy < occupiedThreshold && trueOccupancy > occupiedThreshold) {

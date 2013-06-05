@@ -6,3 +6,24 @@ truePositives = 13 - trueNegatives = 221 - falsePositives = 0 - falseNegatives =
 grid after lbp with learning mse = 0.0636876
 truePositives = 13 - trueNegatives = 225 - falsePositives = 0 - falseNegatives = 11
 
+
+------------------------------------------------------------
+tpr = 0.627551 fpr = 0
+tpr = 0.622159 fpr = 0
+tpr = 0.58194 fpr = 0.019802
+tpr = 0.58194 fpr = 0.019802
+tpr = 0.845714 fpr = 0.019802
+tpr = 0.714286 fpr = 0.0311111
+tpr = 0.714286 fpr = 0.0311111
+tpr = 0.702857 fpr = 0.0311111
+tpr = 0.702857 fpr = 0.0311111
+tpr = 0.541667 fpr = 0.0452128
+tpr = 0.541667 fpr = 0.0452128
+tpr = 0.458333 fpr = 0.0452128
+tpr = 0.458333 fpr = 0.0425532
+tpr = 0.458333 fpr = 0.0425532
+tpr = 0 fpr = 0.00251889
+tpr = 0 fpr = 0
+tpr = 0 fpr = 0
+tpr = -nan fpr = 0
+tpr = -nan fpr = 0
